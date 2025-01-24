@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Plot Example with Grid and Button-Controlled Growth</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        #myplot {
+            width: 80%;
+            height: 60%;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Plot Container -->
+    <div id="myplot"></div>
+    
+    <!-- Button to Add One Data Point -->
+    <button id="addDataPointButton">Add Data Point</button>
+    <button id="removeDataPointButton">Add Data Point</button>
+
+    <script type="module">
+        import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
+
+        // Variables to store data
+        let xData = [];
+        let yData = [];
+
+        // Select the div where the plot will be rendered
+        const div = document.querySelector("#myplot");
+
+        // Function to simulate adding new data points
+        function updatePlot() {
+            // Add new data point with x incremented by 1
+            const newX = xData.length;  // x will start at 0 and increase by 1 with each click
+            const newY = Math.floor(Math.random() * 10);  // Random value between 0 and 9
+
+            // Update the data arrays
+            xData.push(newX);
+            yData.push(newY);
+
+            // Create the plot using the updated data with grid and axes
+            const plot = Plot.plot({
+                marks: [
+                    Plot.line([xData, yData], { stroke: "steelblue" }), // Line plot
+                ],
+                width: div.offsetWidth,  // Adjust width based on container
+                height: div.offsetHeight,  // Adjust height based on container
+                x: {
+                    label: "X Value",
+                    domain: [0, Math.max(...xData)],  // Dynamic x-axis range
+                    grid: true,  // Add gridlines to the x-axis
+                },
+                y: {
+                    label: "Y Value",
+                    grid: true,  // Add gridlines to the y-axis
+                    domain: [0, 9],  // Restrict y values between 0 and 9
+                },
+            });
+
+            // Clear and append the new plot
+            div.innerHTML = '';
+            div.append(plot);
+        }
+
+        function removePlot(){
+            div.removeChild(div.children[0])
+        }
+
+        // Button click handler to add one data point to the plot
+        document.querySelector("#addDataPointButton").addEventListener("click", updatePlot);
+        document.querySelector("#removeDataPointButton").addEventListener("click", removePlot);
+    </script>
+
+</body>
+</html>
