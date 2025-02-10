@@ -16,7 +16,7 @@
                     <form onsubmit="event.preventDefault(); addToList();">
                         <button type="button" onclick="copyToClipboard(values[agent])">Copy</button>
                         <button type="button" onclick="readFromClipboard()">Paste</button>
-                        <input type="number" id="numberInput" placeholder="value" required>
+                        <input  type="text" pattern="[0-9]*[.,]?[0-9]*" id="numberInput" placeholder="value" required>
                         <button style="background-color: green;" type="submit">Insert</button>
                         <button style="background-color: red;" type="button" onclick="removeFromList()">Remove</button>
                         <button style="background-color: gray;" class="clear-btn" type="button" onclick="clearChart()">Clear</button>

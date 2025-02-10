@@ -173,9 +173,15 @@ values.push([19.133, 19.239, 19.349, 19.465, 19.591, 19.73, 19.891, 20.081, 20.3
     
     function addToList() {
         const numInput = document.getElementById('numberInput');
-        const num = +numInput.value;
+        let inputValue = numInput.value;
+    
+        // Replace commas with periods to handle European decimal format
+        inputValue = inputValue.replace(/,/g, '.');
+    
+        const num = +inputValue; // Convert the modified string to a number
     
         if (numInput.value === '' || isNaN(num)) {
+            console.log("nan");
             return;
         }
     
@@ -205,7 +211,7 @@ values.push([19.133, 19.239, 19.349, 19.465, 19.591, 19.73, 19.891, 20.081, 20.3
             <h2 style="height:2.5em">${steps[stepIndex].title}</h2>
             ${steps[stepIndex].pieces.map(piece => `
                 <div class="cake-piece" 
-                     style="width:${piece.width}; height: 10vw; background-color:${piece.color}">
+                     style="width:${piece.width}; background-color:${piece.color}">
                 </div>
             `).join('')}
         `;
@@ -234,6 +240,22 @@ values.push([19.133, 19.239, 19.349, 19.465, 19.591, 19.73, 19.891, 20.081, 20.3
         showStep(currentStep);
         document.getElementById(currentStep).classList.add("active");
     }
+
+    const numberInput = document.getElementById('numberInput');
+
+    numberInput.addEventListener('input', function() {
+        if (numberInput.validity.patternMismatch) {
+            numberInput.setCustomValidity('Enter a number');
+        } else {
+            numberInput.setCustomValidity('');
+        }
+    });
+
+    numberInput.addEventListener('invalid', function() {
+        if (numberInput.validity.patternMismatch) {
+            numberInput .setCustomValidity('Enter a number');
+        }
+    });
     
     // Initialize
     let currentStep = 0;
