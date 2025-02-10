@@ -1,208 +1,89 @@
+<!DOCTYPE html>
+<html>
 <head>
-    <style>
-        @font-face { font-family: productsans; src: url('Product Sans Bold.ttf'); } 
-        body {background-color:#C9E9D2}
-        h1,h2 {font-family:productsans}
-        
-        /* Corrected hover effect */
-        .image-container {
-            position: relative;
-            display: inline-block;
-            margin-top:5%; margin: 2%;
-        }
-
-        .image-container:hover::after {
-            content: '';
-            position: absolute;
-            top: 100%;
-            display:inline-block;
-            left: 0;
-            background-size: contain;
-            background-repeat: no-repeat;
-            width: 300%;
-            height: 400px; /* Adjust as needed */
-            z-index: 10;
-        }
-
-        #graph1:hover::after{
-            background-image: url(graph1.png);
-        }
-        #graph2:hover::after{
-            background-image: url(graph2.png);
-        }
-        #graph3:hover::after{
-            background-image: url(graph3.png);
-        }
-
-
-    </style>
+    <title>Cake Cutting Algorithm Visualizations</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
-
 <body>
-    <center>
-        <h1>
-            Cake Cutting Algorithm Visualisations
-        </h1>
-        <h2>
-            We have a cake which must be shared between three people
-        </h2>
-        <div style="width:70%;height:25vw;background-color:CFBBF5;border-radius: 5px; border-width:thick; border-color:white; border-style:solid;">
-        </div>
+    <div class="aspect-container">
+        <div class="blur" id="blur"></div>
+        <center>
+            <h1>Cake Cutting Algorithm Visualisations</h1>
 
-        <div class="image-container" id="graph1">
-            <img src="agent.png" alt="user icon" style=" height:5vh; filter: hue-rotate(0deg)">
-        </div>
-        <div class="image-container" id="graph2">
-            <img src="agent.png" alt="user icon" style=" height:5vh; filter: hue-rotate(60deg)">
-        </div>
-        <div class="image-container" id="graph3">
-            <img src="agent.png" alt="user icon" style=" height:5vh; filter: hue-rotate(180deg)">
-        </div>
+            <div class="container" id="modal">
+                <div id="chart_div"></div>
+                <div class="controls-container">
+                    <form onsubmit="event.preventDefault(); addToList();">
+                        <button type="button" onclick="copyToClipboard(values[agent])">Copy</button>
+                        <button type="button" onclick="readFromClipboard()">Paste</button>
+                        <input type="number" id="numberInput" placeholder="value" required>
+                        <button style="background-color: green;" type="submit">Insert</button>
+                        <button style="background-color: red;" type="button" onclick="removeFromList()">Remove</button>
+                        <button style="background-color: gray;" class="clear-btn" type="button" onclick="clearChart()">Clear</button>
+                        <button style="background-color: green;" class="clear-btn" type="button" onclick="toggleModal()">Done</button>
+                    </form>
+                </div>
+            </div>
 
-        <br>
+            <div class="image-container" id="graph1">
+                <img title="Click to edit" onclick="agent = 0; toggleModal(); drawChart()" src="agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(0deg)">
+            </div>
+            <div class="image-container" id="graph2">
+                <img title="Click to edit" onclick="agent = 1; toggleModal(); drawChart()" src="agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(60deg)">
+            </div>
+            <div class="image-container" id="graph3">
+                <img title="Click to edit" onclick="agent = 2; toggleModal(); drawChart()" src="agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(180deg)">
+            </div>
 
-        <h2>
-            Archie splits the cake into three pieces that he wants equally
-        </h2>
-        <div style="width:25%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:30%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:15%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
+            <br>
 
-     
+            <div class="input_container hidden">
+                <h2>We have a cake which must be shared between three people</h2>
+                <h2>Enter your value equation:</h2>
+                <input class="input large" title="equation" placeholder="y = 1" type="text">
+                
+                <div class="input-group">
+                    <h2>Start:</h2>
+                    <input class="input small" title="start" placeholder="0" type="text">
+                    <h2>End:</h2>
+                    <input class="input small" title="end" placeholder="10" type="text">
+                </div>
+            </div>
 
-        
-        <br>
-        <br>
-        <br>
+            <div id="visualization-container">
+                <div style="width:70%; aspect-ratio: 2.2; background-image:url(cake.png);
+                    background-size: cover; background-position: center; border-radius: 5px;
+                    border-width:thick; border-color:white; border-style:solid;">
+                </div>
+            </div>
 
-        <h2>
-            Bobby picks the two pieces that he likes the most
-        </h2>
-        <div style="width:25%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:30%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
+            <img class="controls" onclick="restart()" title="Restart" src="restart.png">
+            <img class="controls" onclick="previous()" title="Previous step" src="previous.png">
+            <img class="controls" title="Play" src="play.png">
+            <img class="controls hidden" title="Pause" src="pause.png">
+            <img class="controls" onclick="next()" title="Next step" src="next.png">
 
-        <div style="width:15%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <br>
-        <br>
-        <br>
-        
+            <br><br>
 
-        <h2>
-            And trims the best piece so that the pieces are equal
-        </h2>
-        <div style="width:25%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:25%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:5%;height:25vw;background-color:9AD69A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:15%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
+            <div class="code-container">
+                <div id="0" class="row even active">Main cake:</div>
+                <div id="1" class="row odd indent">P1 divides the cake into three pieces they consider of equal size.</div>
+                <div id="2" class="row even indent">P2 cuts off a bit of their favourite piece to make it the same size as the second largest.</div>
+                <div id="3" class="row odd indent">P3 chooses a piece among A1 and the two other pieces.</div>
+                <div id="4" class="row even indent">P2 chooses a piece with the limitation that if P3 didn't choose A1, P2 must choose it.</div>
+                <div id="5" class="row odd indent">P1 chooses the last piece leaving just the trimmings A2 to be divided.</div>
+                <div id="6" class="row even">Trimming:</div>
+                <div id="7" class="row odd indent">We call the player that chose the trimmed piece PA and the other player in {P2, P3} PB.</div>
+                <div id="8" class="row even indent">PB cuts A2 into three equal pieces.</div>
+                <div id="9" class="row odd indent">PA chooses a piece of A2 - we name it A21.</div>
+                <div id="10" class="row even indent">P1 chooses a piece of A2 - we name it A22.</div>
+                <div id="11" class="row odd indent">PB chooses the last remaining piece of A2 - we name it A23.</div>
+            </div>
 
-
-        <br>
-        <br>
-        <br>
-        
-
-        <h2>
-            Then Chloe picks her favourite piece from Bobby's two favourites
-        </h2>
-        <div style="width:25%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:25%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:5%;height:25vw;background-color:9AD69A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:15%;height:25vw;background-color:8BD4D4;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-
-
-        <br>
-        <br>
-        <br>
-        
-
-        <h2>
-            Bobby gets piece which has been trimmed so Chloe gets to cut the trimming
-        </h2>
-        <div style="width:70%;height:25vw;background-color:9AD69A;border-radius: 5px; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-
-        
-        <br>
-        <br>
-        <br>
-
-        <h2>
-            Chloe cuts the trimming into three pieces which she values equally
-        </h2>
-        <div style="width:24%;height:25vw;background-color:9AD69A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:24%;height:25vw;background-color:9AD69A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:24%;height:25vw;background-color:9AD69A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-
-
-        <br>
-        <br>
-        <br>
-
-        <h2>
-            Bobby picks his favourite, then Chloe, leaving Archie with the last piece
-        </h2>
-        <div style="width:24%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:24%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:24%;height:25vw;background-color:8BD4D4;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-
-
-        <br>
-        <br>
-        <br>
-        <h2>
-            We add the trimming to the main slice for each player
-        </h2>
-        <div style="width:25%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:1.7%;height:25vw;background-color:9AD69A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:25%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:1.7%;height:25vw;background-color:9AD69A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:15%;height:25vw;background-color:8BD4D4;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:1.7%;height:25vw;background-color:9AD69A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-
-        <br>
-        <br>
-        <br>
-        <h2>
-            Leaving every player feeling as though they got their fair share
-        </h2>
-        <div style="width:25%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:1.7%;height:25vw;background-color:FFB5B5;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:25%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:1.7%;height:25vw;background-color:D4C68A;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:15%;height:25vw;background-color:8BD4D4;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-        <div style="width:1.7%;height:25vw;background-color:8BD4D4;border-radius: 5px;display:inline-block; border-width:thick; border-color:white; border-style:solid;">
-        </div>
-
-    </center>
+            <br><br><br><br>
+        </center>
+    </div>
+    <script src="script.js"></script>
 </body>
+</html>

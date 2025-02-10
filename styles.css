@@ -1,0 +1,288 @@
+@font-face { 
+    font-family: productsans; 
+    src: url('Product Sans Bold.ttf'); 
+} 
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #121212;
+}
+
+.aspect-container {
+    background-color: #bbd1e7;
+    max-width: 77.5vh;
+    width: 100%;
+    min-height: 100vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+::-webkit-scrollbar {
+    width: 24px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #2d2d2d;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4a4a4a;
+    border-radius: 6px;
+    border: 3px solid #2d2d2d;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5e5e5e;
+}
+
+html {
+    scrollbar-color: #4a4a4a #2d2d2d;
+    scrollbar-width: thick;
+}
+
+h1, h2 {
+    font-family: productsans;
+    margin: 0.5em 0;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+    margin-top: 3%;
+    margin: 2%;
+}
+
+
+.blur {
+    width: 100%;
+    min-height: 100vh;
+    height: 100%;
+    z-index: 999;
+    position: absolute;
+    visibility: hidden;
+    backdrop-filter: blur(10px);
+}
+
+.code-container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.input_container {
+    margin: 5vh auto;
+    background-color: #b1d1b1;
+    width: 90%;
+    border: thick solid rgb(0, 132, 255);
+    border-radius: 1em;
+    padding: 2vh;
+    box-sizing: border-box;
+}
+
+.input_container h2 {
+    margin: 0 0 2vh 0;
+    color: #2a4a2a;
+}
+
+.input {
+    font-family: productsans;
+    border: thick solid rgb(0, 132, 255);
+    outline: none;
+    border-radius: 0.5em;
+    padding: 0.5em;
+    text-align: center;
+    font-size: 1.5em;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    background-color: white;
+}
+
+.input:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.3);
+}
+
+.input::placeholder {
+    color: #999;
+}
+
+.large {
+    width: 100%;
+    margin: 2vh 0;
+}
+
+.small {
+    width: 120px;
+    margin: 0 1vh;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1vh;
+    margin-top: 2vh;
+}
+
+.container {
+    display: flex;
+    width: 80%;
+    height: 50vh;
+    position: absolute;
+    left: 10%;
+    top: 25%;
+    z-index: 1000;
+}
+
+#modal { 
+    visibility: hidden;
+}
+
+#chart_div {
+    flex: 1;
+    padding: 10px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background-color: white;
+}
+
+.controls-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.controls-container form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.controls-container button,
+.controls-container input {
+    aspect-ratio: 1;
+    width: 4rem;
+    padding: 0;
+    border: none;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.controls-container input {
+    border: 1px solid #ddd;
+    text-align: center;
+    outline: none;
+}
+
+.controls-container input:focus {
+    border: 1px solid #ddd;
+    box-shadow: none;
+}
+
+.controls-container input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    appearance: none;
+}
+
+.controls-container input[type="number"]::-webkit-inner-spin-button,
+.controls-container input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.controls-container button {
+    background-color: #4285F4;
+    color: white;
+}
+
+.controls-container button:hover {
+    background-color: #357ABD;
+}
+
+button[style*="background-color: green"] {
+    background-color: #34A853 !important;
+}
+
+button[style*="background-color: green"]:hover {
+    background-color: #2E8B47 !important;
+}
+
+button[style*="background-color: red"],
+.clear-btn {
+    background-color: #EA4335 !important;
+}
+
+button[style*="background-color: red"]:hover,
+.clear-btn:hover {
+    background-color: #D03A2E !important;
+}
+
+button[style*="background-color: gray"] {
+    background-color: #9AA0A6 !important;
+}
+
+button[style*="background-color: gray"]:hover {
+    background-color: #80868B !important;
+}
+
+.custom-tooltip {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #333;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.row {
+    height: 2em;
+    font-size: 0.85em;
+    align-items: center;
+    line-height: 2em;
+    padding-left: 1em;
+    text-align: left;
+    justify-content: center;
+    font-family: productsans;
+}
+
+.odd { background-color: white; }
+.even { background-color: lightgray; }
+.indent { padding-left: 2em; }
+.active { 
+    border-width: thick;
+    border-left-style: solid;
+    border-color: rgb(0, 132, 255);
+}
+
+.controls {
+    width: 5vh;
+    display: inline-block;
+    padding: 1vh;
+    padding-top: 3vh;
+}
+
+.hidden { display: none; }
+
+.cake-piece {
+    height: 25vw;
+    border-radius: 5px;
+    display: inline-block;
+    border: thick solid white;
+    margin: 0 -2px;
+    vertical-align: top;
+}
