@@ -7,9 +7,8 @@
 </head>
 <body>
     <div class="aspect-container">
-        <div class="blur" id="blur"></div>
+        <div class="blur" onclick="toggleModal()" id="blur"></div>
         <center>
-            <h1>Cake Cutting Algorithm Visualisations</h1>
 
             <div class="container" id="modal">
                 <div id="chart_div"></div>
@@ -26,14 +25,15 @@
                 </div>
             </div>
 
+            <h1>Cake Cutting Algorithm Visualisations</h1>
             <div class="image-container" id="graph1">
-                <img title="Click to edit" onclick="agent = 0; toggleModal(); drawChart()" src="agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(0deg)">
+                <img title="Click to edit" onclick="agent = 0; toggleModal(); drawChart()" src="./assets/agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(0deg)">
             </div>
             <div class="image-container" id="graph2">
-                <img title="Click to edit" onclick="agent = 1; toggleModal(); drawChart()" src="agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(60deg)">
+                <img title="Click to edit" onclick="agent = 1; toggleModal(); drawChart()" src="./assets/agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(60deg)">
             </div>
             <div class="image-container" id="graph3">
-                <img title="Click to edit" onclick="agent = 2; toggleModal(); drawChart()" src="agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(180deg)">
+                <img title="Click to edit" onclick="agent = 2; toggleModal(); drawChart()" src="./assets/agent.png" alt="user icon" style="margin-left:5vh; margin-right:5vh; height:5vh; filter: hue-rotate(180deg)">
             </div>
 
             <br>
@@ -58,11 +58,11 @@
                 </div>
             </div>
 
-            <img class="controls" onclick="restart()" title="Restart" src="restart.png">
-            <img class="controls" onclick="previous()" title="Previous step" src="previous.png">
-            <img class="controls" title="Play" src="play.png">
-            <img class="controls hidden" title="Pause" src="pause.png">
-            <img class="controls" onclick="next()" title="Next step" src="next.png">
+            <img class="controls" onclick="restart()" title="Restart" src="./assets/controls/restart.png">
+            <img class="controls" onclick="previous()" title="Previous step" src="./assets/controls/previous.png">
+            <img class="controls" title="Play" src="./assets/controls/play.png">
+            <img class="controls hidden" title="Pause" src="./assets/controls/pause.png">
+            <img class="controls" onclick="next()" title="Next step" src="./assets/controls/next.png">
 
             <br><br>
 

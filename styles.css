@@ -1,6 +1,6 @@
 @font-face { 
     font-family: productsans; 
-    src: url('Product Sans Bold.ttf'); 
+    src: url('./assets/Product Sans Bold.ttf'); 
 } 
 
 body {
@@ -11,10 +11,11 @@ body {
     align-items: center;
     min-height: 100vh;
     background-color: #121212;
+    color: #fff;
 }
 
 .aspect-container {
-    background-color: #bbd1e7;
+    background-color: #404045;
     max-width: 77.5vh;
     width: 100%;
     min-height: 100vh;
@@ -168,7 +169,7 @@ h1, h2 {
 
 .controls-container button,
 .controls-container input {
-    aspect-ratio: 1;
+    aspect-ratio: 1.33;
     width: 4rem;
     padding: 0;
     border: none;
@@ -183,13 +184,12 @@ h1, h2 {
 }
 
 .controls-container input {
-    border: 1px solid #ddd;
     text-align: center;
     outline: none;
 }
 
 .controls-container input:focus {
-    border: 1px solid #ddd;
+    border: none;
     box-shadow: none;
 }
 
@@ -258,6 +258,7 @@ button[style*="background-color: gray"]:hover {
     text-align: left;
     justify-content: center;
     font-family: productsans;
+    color: black;
 }
 
 .odd { background-color: white; }
