@@ -2,8 +2,11 @@ google.charts.load('current', { packages: ['corechart'] });
 google.charts.setOnLoadCallback(drawChart);
 
 let values = [];
+let position = undefined;
 let agent = 1;
 let modal_up = 1;
+
+var chart;
 
 const steps = [
     {
@@ -143,8 +146,23 @@ values.push([19.133, 19.239, 19.349, 19.465, 19.591, 19.73, 19.891, 20.081, 20.3
             chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
         };
     
-        var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+        chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
         chart.draw(data, options);
+    
+        // Add a selection handler
+        function selectHandler() {
+            var selectedItem = chart.getSelection()[0];
+            if (selectedItem) {
+                var value = data.getValue(selectedItem.row, selectedItem.column);
+                position = (selectedItem.row - 1) /3
+            }
+        }
+    
+        // Listen for the 'select' event
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+
+        
+        chart.setSelection([{ row: position * 3 +1, column: 2 }])
     }
     
     function createTooltip(index, value) {
@@ -184,15 +202,28 @@ values.push([19.133, 19.239, 19.349, 19.465, 19.591, 19.73, 19.891, 20.081, 20.3
             console.log("nan");
             return;
         }
+
+        if (position == undefined){
+            position = values[agent].length - 1;
+        }
+        
+        index = position;
     
-        values[agent].push(num);
+        values[agent].splice(index+1, 0, num)
         numInput.value = '';
+        
+        position += 1
         drawChart();
+        chart.setSelection([{ row: position * 3 +1, column: 2 }])
     }
     
     function removeFromList() {
-        values[agent].pop();
+        index = position;
+        values[agent].splice(index, 1);
         drawChart();
+        position -= 1
+        if (position < 0){position = 0}
+        chart.setSelection([{ row: position * 3 +1, column: 2 }])
     }
     
     function clearChart() {
@@ -201,7 +232,11 @@ values.push([19.133, 19.239, 19.349, 19.465, 19.591, 19.73, 19.891, 20.081, 20.3
     }
     
     function setAgent(n) {
-        agent = n;
+        if (agent != n){
+            agent = n;
+            position = values[agent].length - 1;
+        }
+        toggleModal()
         drawChart();
     }
     
