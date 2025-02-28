@@ -38,6 +38,11 @@ function toggleModal() {
         modal_up = true;
         document.getElementById("modal").style.visibility = "hidden";
         document.getElementById("blur").style.visibility = "hidden";
+        if (values[agent].length == 0){
+            values[agent] = [1]
+            position = 0
+            chart.setSelection([{ row: position * 3 +1, column: 2 }])
+        }
     }
 }
 
