@@ -454,7 +454,7 @@ function selfridge_conway(){
         {
             title: "We can add the trimming back to the original pieces to see what everyone ends up with",
             pieces: [
-                ...save_initial_cuts.map((range, index) => ({
+                ...save_trimmed_cuts.map((range, index) => ({
                     range,
                     color: index === main_assignments[0] ? colours[0] : 
                            index === main_assignments[1] ? colours[1] : 
