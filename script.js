@@ -256,18 +256,21 @@ function diff_eval(preference_values, start_position, end_position){
 agent_a_initial_cuts = [[0,cut(values[0], 1/3)], [cut(values[0], 1/3),cut(values[0], 2/3)], [cut(values[0], 2/3),1]]
 save_initial_cuts = agent_a_initial_cuts.slice()
 
+// P2 trims their favourite piece, making it equal to their second
 agent_b_initial_evaluations = agent_a_initial_cuts.map(x => diff_eval(values[1], x[0], x[1]))
-
 
 agent_b_favourite_index = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
 agent_b_initial_evaluations[agent_b_favourite_index] = -1
 
 agent_b_second_favourite_value = agent_b_initial_evaluations[agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)]
+agent_b_second_favourite_index = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)
 
 trim = [-1, agent_a_initial_cuts[agent_b_favourite_index][1]]
 
 agent_a_initial_cuts[agent_b_favourite_index] = [agent_a_initial_cuts[agent_b_favourite_index][0], diff_cut(values[1], agent_a_initial_cuts[agent_b_favourite_index][0], agent_b_second_favourite_value)]
 trim = [agent_a_initial_cuts[agent_b_favourite_index][1],trim[1]]
+
+save_trimmed_cuts = agent_a_initial_cuts.slice()
 
 
 agent_c_evaluations = agent_a_initial_cuts.map(x => diff_eval(values[2], x[0], x[1]))
@@ -290,6 +293,10 @@ main_assignments = [agent_a_assignment[0], agent_b_assignment, agent_c_assignmen
 agent_PA_trim_value = diff_eval(values[PA], trim[0], trim[1])
 agent_PA_trim_cuts = [[trim[0],diff_cut(values[PA], trim[0], agent_PA_trim_value/3)],[diff_cut(values[PA], trim[0], agent_PA_trim_value/3),diff_cut(values[PA], trim[0], 2*agent_PA_trim_value/3)],[diff_cut(values[PA], trim[0], 2*agent_PA_trim_value/3),trim[1]]]
 
+save_trim_piece_cuts = agent_PA_trim_cuts.slice()
+
+save_stretched_trim_cuts = agent_PA_trim_cuts.map(([start, end]) => [(start - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0]), (end - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])]);
+
 trim_assignments = [-1,-1,-1]
 trim_assignments[PB] = agent_PA_trim_cuts.map(x => diff_eval(values[PB], x[0], x[1])).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
 trim_trim_temp = agent_PA_trim_cuts[trim_assignments[PB]]
@@ -304,7 +311,7 @@ console.log(diff_eval(values[0], agent_a_initial_cuts[main_assignments[0]][0], a
 console.log(diff_eval(values[1], agent_a_initial_cuts[main_assignments[1]][0], agent_a_initial_cuts[main_assignments[1]][1])+ diff_eval(values[1], agent_PA_trim_cuts[trim_assignments[1]][0], agent_PA_trim_cuts[trim_assignments[1]][1]))
 console.log(diff_eval(values[2], agent_a_initial_cuts[main_assignments[2]][0], agent_a_initial_cuts[main_assignments[2]][1])+ diff_eval(values[2], agent_PA_trim_cuts[trim_assignments[2]][0], agent_PA_trim_cuts[trim_assignments[2]][1]))
 
-
+colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
 
 // Visualisation and stepping
     const steps = [
@@ -315,7 +322,7 @@ console.log(diff_eval(values[2], agent_a_initial_cuts[main_assignments[2]][0], a
             ]
         },
         {
-            title: "Archie splits the cake into three pieces that he wants equally",
+            title: "Player 1 splits the cake into three pieces that they value equally",
             pieces: [
                 { range: save_initial_cuts[0], color: "#FFB5B5" },
                 { range: save_initial_cuts[1], color: "#FFB5B5" },
@@ -323,92 +330,151 @@ console.log(diff_eval(values[2], agent_a_initial_cuts[main_assignments[2]][0], a
             ]
         },
         {
-            title: "Bobby picks the two pieces that he likes the most",
+            title: "Player 2 trims their favourite piece to be equal to their second favourite, leaving a `trimmed piece` and creating a `trimming`",
             pieces: [
-                { range: agent_a_initial_cuts[agent_b_favourite_index], color: "#FFB5B5" },
-                { range: "30%", color: "#D4C68A" },
-                { range: "15%", color: "#D4C68A" }
+                { range: trim, color: "#d3d3d3" },
+                ...save_trimmed_cuts.map((cut, index) => ({
+                    range: cut,
+                    color: (index === agent_b_favourite_index || index === agent_b_second_favourite_index) 
+                        ? "#FFFFB5" 
+                        : "#d3d3d3" 
+                }))
             ]
         },
         {
-            title: "And trims the best piece so that the pieces are equal",
+            title: "Then Player 3 picks their favourite piece that isnt the trimming",
             pieces: [
-                { range: "25%", color: "#FFB5B5" },
-                { range: "25%", color: "#D4C68A" },
-                { range: "5%", color: "#9AD69A" },
-                { range: "15%", color: "#D4C68A" }
+                { range: trim, color: "#d3d3d3" },
+                ...save_trimmed_cuts.map((cut, index) => ({
+                    range: cut,
+                    color: (index === agent_c_assignment) 
+                        ? "#B5FFFF" // Pastel cyan for Charlie's piece
+                        : "#d3d3d3" // Grey for the rest
+                }))
             ]
         },
         {
-            title: "Then Chloe picks her favourite piece from Bobby's two favourites",
+            title: "Then Player 2 picks from the remaining two pieces, they have to take the trimmed piece if it is available",
             pieces: [
-                { range: "25%", color: "#FFB5B5" },
-                { range: "25%", color: "#D4C68A" },
-                { range: "5%", color: "#9AD69A" },
-                { range: "15%", color: "#8BD4D4" }
+                { range: trim, color: "#d3d3d3" },
+                ...save_trimmed_cuts.map((cut, index) => ({
+                    range: cut,
+                    color: (index === agent_c_assignment) 
+                        ? "#B5FFFF" 
+                        : (index === agent_b_assignment) 
+                            ? "#FFFFB5" 
+                            : "#d3d3d3" 
+                }))
             ]
         },
         {
-            title: "Bobby gets piece which has been trimmed so Chloe gets to cut the trimming",
+            title: "Player 1 takes the remaining piece of the cake",
             pieces: [
-                { range: "70%", color: "#9AD69A" }
+                { range: trim, color: "#d3d3d3" },
+                ...save_trimmed_cuts.map((cut, index) => ({
+                    range: cut,
+                    color: (index === agent_c_assignment) 
+                        ? "#B5FFFF"
+                        : (index === agent_b_assignment) 
+                            ? "#FFFFB5" 
+                            : "#FFB5B5" 
+                }))
             ]
         },
         {
-            title: "Chloe cuts the trimming into three pieces which she values equally",
+            title: "Now we have to divide up the trimming which Player 2 left",
             pieces: [
-                { range: "24%", color: "#9AD69A" },
-                { range: "24%", color: "#9AD69A" },
-                { range: "24%", color: "#9AD69A" }
+                {range: [0,1], color:"#d3d3d3"}
             ]
         },
         {
-            title: "Bobby picks his favourite, then Chloe, leaving Archie with the last piece",
+            title: "We call whoever ended up with the trimmed piece Player A and whichever of Player 2 and Player 3 didn't Player B",
             pieces: [
-                { range: "24%", color: "#FFB5B5" },
-                { range: "24%", color: "#D4C68A" },
-                { range: "24%", color: "#8BD4D4" }
+                {range: [0,1], color:"#d3d3d3"}
             ]
         },
         {
-            title: "We add the trimming to the main slice for each player",
+            title: "Player B trims the trimming into three pieces which they value equally",
             pieces: [
-                { range: "25%", color: "#FFB5B5" },
-                { range: "1.7%", color: "#9AD69A" },
-                { range: "25%", color: "#D4C68A" },
-                { range: "1.7%", color: "#9AD69A" },
-                { range: "15%", color: "#8BD4D4" },
-                { range: "1.7%", color: "#9AD69A" }
+                { range: save_stretched_trim_cuts[0], color: (PB === 1) ? "#FFFFB5" : "#B5FFFF" },
+                { range: save_stretched_trim_cuts[1], color: (PB === 1) ? "#FFFFB5" : "#B5FFFF" },
+                { range: save_stretched_trim_cuts[2], color: (PB === 1) ? "#FFFFB5" : "#B5FFFF" }
             ]
         },
         {
-            title: "Leaving every player feeling as though they got their fair share",
+            title: "Then Player A picks their favourite piece of the trimming",
+            pieces: save_stretched_trim_cuts.map((range, index) => ({
+                range: save_stretched_trim_cuts[index], 
+                color: (range === save_stretched_trim_cuts[trim_assignments[PA]]) ? colours[PA] : "#d3d3d3" 
+            }))
+        },
+        {
+            title: "Player 1 Picks next",
+            pieces: save_stretched_trim_cuts.map((range, index) => ({
+                range: save_stretched_trim_cuts[index], 
+                color: (range === save_stretched_trim_cuts[trim_assignments[PA]]) ? colours[PA] 
+                    : (range === save_stretched_trim_cuts[trim_assignments[0]]) ? colours[0]
+                    : "#d3d3d3"
+            }))
+        },
+        {
+            title: "Finally, Player B is left with the last piece of the trimming",
+            pieces: save_stretched_trim_cuts.map((range, index) => ({
+                range: save_stretched_trim_cuts[index],
+                color: (range === save_stretched_trim_cuts[trim_assignments[PA]]) ? colours[PA]
+                    : (range === save_stretched_trim_cuts[trim_assignments[0]]) ? colours[0] 
+                    : colours[PB] 
+            }))
+        },
+        {
+            title: "We can add the trimming back to the original pieces to see what everyone ends up with",
             pieces: [
-                { range: "25%", color: "#FFB5B5" },
-                { range: "1.7%", color: "#FFB5B5" },
-                { range: "25%", color: "#D4C68A" },
-                { range: "1.7%", color: "#D4C68A" },
-                { range: "15%", color: "#8BD4D4" },
-                { range: "1.7%", color: "#8BD4D4" }
+                ...save_initial_cuts.map((range, index) => ({
+                    range,
+                    color: index === main_assignments[0] ? colours[0] : 
+                           index === main_assignments[1] ? colours[1] : 
+                           colours[2] 
+                })),
+                ...save_trim_piece_cuts.map((range, index) => ({
+                    range,
+                    color: index === trim_assignments[0] ? colours[0] : 
+                           index === trim_assignments[1] ? colours[1] :  
+                           colours[2] 
+                }))
             ]
         }
+        
     ];
 
     function showStep(stepIndex) {
         const container = document.getElementById('visualization-container');
+
+
+        agents = ["P1","P2","P3"]
+        if (stepIndex == 7){
+            document.getElementById(agents[PA]).innerHTML = agents[PA] + ", PA"
+            document.getElementById(agents[PB]).innerHTML = agents[PB] + ", PB"
+        }else if(stepIndex < 7){
+            document.getElementById(agents[1]).innerHTML = agents[PA]
+            document.getElementById(agents[2]).innerHTML = agents[PB]
+        }
+        
+        const sortedPieces = [...steps[stepIndex].pieces].sort((a, b) => a.range[0] - b.range[0]);
+    
         container.innerHTML = `
             <h2 style="height:2.5em">${steps[stepIndex].title}</h2>
             <div class="cake-container">
-                ${steps[stepIndex].pieces.map(piece => `
+                ${sortedPieces.map(piece => `
                     <div class="cake-piece" 
                             style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
-                                   background-position: ${-(container.clientWidth*0.7) * piece.range[0]}px 0;
+                                   background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
                                    border-color:${piece.color}">
                     </div>
                 `).join('')}
             </div>
         `;
     }
+    
     
 
 function restart() {
@@ -421,7 +487,7 @@ function restart() {
 function next() {
     document.getElementById(currentStep).classList.remove("active");
     currentStep++;
-    if (currentStep == 10) {
+    if (currentStep == 13) {
         currentStep = 0;
     } 
     showStep(currentStep);
@@ -431,6 +497,9 @@ function next() {
 function previous() {
     document.getElementById(currentStep).classList.remove("active");
     currentStep--;
+    if (currentStep == -1) {
+        currentStep = 12;
+    } 
     showStep(currentStep);
     document.getElementById(currentStep).classList.add("active");
 }
