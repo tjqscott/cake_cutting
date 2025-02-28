@@ -28,9 +28,18 @@
             <h1>Cake Cutting Algorithm Visualisations</h1>
 
             <div id="agent_container">
-                <img title="Click to edit" onclick="setAgent(0)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(0deg)">
-                <img title="Click to edit" onclick="setAgent(1)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(60deg)">
-                <img title="Click to edit" onclick="setAgent(2)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(180deg)">
+                <div class="agent_wrapper">
+                    <img title="Click to edit" onclick="setAgent(0)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(0deg)">
+                    <p>P1</p>
+                </div>
+                <div class="agent_wrapper">
+                    <img title="Click to edit" onclick="setAgent(0)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(60deg)">
+                    <p>P2</p>
+                </div>
+                <div class="agent_wrapper">
+                    <img title="Click to edit" onclick="setAgent(0)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(180deg)">
+                    <p>P3</p>
+                </div>
 
             </div>
 
@@ -64,17 +73,17 @@
 
             <div class="code-container">
                 <div id="0" class="row even active">Main cake:</div>
-                <div id="1" class="row odd indent">P1 divides the cake into three pieces they consider of equal size.</div>
-                <div id="2" class="row even indent">P2 cuts off a bit of their favourite piece to make it the same size as the second largest.</div>
-                <div id="3" class="row odd indent">P3 chooses a piece among A1 and the two other pieces.</div>
-                <div id="4" class="row even indent">P2 chooses a piece with the limitation that if P3 didn't choose A1, P2 must choose it.</div>
-                <div id="5" class="row odd indent">P1 chooses the last piece leaving just the trimmings A2 to be divided.</div>
+                <div id="1" class="row odd indent">P1 cuts the cake into three pieces they consider of equal size</div>
+                <div id="2" class="row even indent">P2 trims their favourite piece, making it equal to their second</div>
+                <div id="3" class="row odd indent">P3 chooses their favourite piece that isn't the trimming</div>
+                <div id="4" class="row even indent">P2 chooses next but has to take the trimmed piece if P3 didn't</div>
+                <div id="5" class="row odd indent">P1 takes the remaining piece just leaving the trimming</div>
                 <div id="6" class="row even">Trimming:</div>
-                <div id="7" class="row odd indent">We call the player that chose the trimmed piece PA and the other player in {P2, P3} PB.</div>
-                <div id="8" class="row even indent">PB cuts A2 into three equal pieces.</div>
-                <div id="9" class="row odd indent">PA chooses a piece of A2 - we name it A21.</div>
-                <div id="10" class="row even indent">P1 chooses a piece of A2 - we name it A22.</div>
-                <div id="11" class="row odd indent">PB chooses the last remaining piece of A2 - we name it A23.</div>
+                <div id="7" class="row odd indent">We call P1 & P2 PA & PB where PA took the trimmed piece</div>
+                <div id="8" class="row even indent">PB cuts the trimming into three piece that they value equally</div>
+                <div id="9" class="row odd indent">First, PA chooses their favourite piece of the trimming</div>
+                <div id="10" class="row even indent">Then, P1 chooses their favourite of the remaining pieces</div>
+                <div id="11" class="row odd indent">Finally, PB gets the last remaining piece of the trimming</div>
             </div>
 
             <br><br><br><br>

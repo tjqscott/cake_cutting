@@ -69,6 +69,19 @@ h1, h2 {
     justify-content:space-around;
 }
 
+.agent_wrapper{
+    padding:0;
+    margin:0;
+    gap:0;
+    display:flex;
+    flex-direction: column;
+}
+
+.agent_wrapper p{
+    padding:0;
+    margin:0;
+}
+
 .agent_icon{
     height:5vw;
     padding-top:2.5vw;
