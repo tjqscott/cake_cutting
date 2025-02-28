@@ -251,8 +251,13 @@ function diff_eval(preference_values, start_position, end_position){
     return evaluate(preference_values, end_position) - evaluate(preference_values, start_position)
 }
 
+
+// P1 cuts the cake into three pieces they consider of equal size
 agent_a_initial_cuts = [[0,cut(values[0], 1/3)], [cut(values[0], 1/3),cut(values[0], 2/3)], [cut(values[0], 2/3),1]]
+save_initial_cuts = agent_a_initial_cuts.slice()
+
 agent_b_initial_evaluations = agent_a_initial_cuts.map(x => diff_eval(values[1], x[0], x[1]))
+
 
 agent_b_favourite_index = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
 agent_b_initial_evaluations[agent_b_favourite_index] = -1
@@ -312,9 +317,9 @@ console.log(diff_eval(values[2], agent_a_initial_cuts[main_assignments[2]][0], a
         {
             title: "Archie splits the cake into three pieces that he wants equally",
             pieces: [
-                { range: agent_a_initial_cuts[0], color: "#FFB5B5" },
-                { range: agent_a_initial_cuts[1], color: "#FFB5B5" },
-                { range: agent_a_initial_cuts[2], color: "#FFB5B5" }
+                { range: save_initial_cuts[0], color: "#FFB5B5" },
+                { range: save_initial_cuts[1], color: "#FFB5B5" },
+                { range: save_initial_cuts[2], color: "#FFB5B5" }
             ]
         },
         {
@@ -389,17 +394,22 @@ console.log(diff_eval(values[2], agent_a_initial_cuts[main_assignments[2]][0], a
         }
     ];
 
-function showStep(stepIndex) {
-    const container = document.getElementById('visualization-container');
-    container.innerHTML = `
-        <h2 style="height:2.5em">${steps[stepIndex].title}</h2>
-        ${steps[stepIndex].pieces.map(piece => `
-            <div class="cake-piece" 
-                    style="width:${(piece.range[1] - piece.range[0]) * 70}%; background-position: ${piece.range[1]*100}% ; border-color:${piece.color}">
+    function showStep(stepIndex) {
+        const container = document.getElementById('visualization-container');
+        container.innerHTML = `
+            <h2 style="height:2.5em">${steps[stepIndex].title}</h2>
+            <div class="cake-container">
+                ${steps[stepIndex].pieces.map(piece => `
+                    <div class="cake-piece" 
+                            style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
+                                   background-position: ${-(container.clientWidth*0.7) * piece.range[0]}px 0;
+                                   border-color:${piece.color}">
+                    </div>
+                `).join('')}
             </div>
-        `).join('')}
-    `;
-}
+        `;
+    }
+    
 
 function restart() {
     document.getElementById(currentStep).classList.remove("active");

@@ -83,9 +83,9 @@ h1, h2 {
 }
 
 .agent_icon{
-    height:5vw;
-    padding-top:2.5vw;
-    padding-bottom:2.5vw;
+    height:4em;
+    padding-top:1em;
+    padding-bottom:1em;
 }
 
 
@@ -297,6 +297,7 @@ button[style*="background-color: gray"]:hover {
     border-width: thick;
     border-left-style: solid;
     border-color: rgb(0, 132, 255);
+    margin-left: -5px;
 }
 
 .controls {
