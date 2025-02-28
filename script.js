@@ -302,15 +302,38 @@ function selfridge_conway(){
 
     save_stretched_trim_cuts = agent_PA_trim_cuts.map(([start, end]) => [(start - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0]), (end - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])]);
 
-    trim_assignments = [-1,-1,-1]
-    trim_assignments[PB] = agent_PA_trim_cuts.map(x => diff_eval(values[PB], x[0], x[1])).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-    trim_trim_temp = agent_PA_trim_cuts[trim_assignments[PB]]
-    agent_PA_trim_cuts[trim_assignments[PB]] = [0,0]
+    // Initialize the assignments array
+    trim_assignments = [-1, -1, -1];
 
-    trim_assignments[0] = agent_PA_trim_cuts.map(x => diff_eval(values[0], x[0], x[1])).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-    trim_assignments[PA] = [0,1,2].filter(item => !trim_assignments.includes(item))[0];
+    // Store a copy of the original cuts for reference
+    const originalCuts = [...agent_PA_trim_cuts];
 
-    agent_PA_trim_cuts[trim_assignments[PB]] = trim_trim_temp
+    // Step 1: Find the best option for PB
+    let pbUtilities = agent_PA_trim_cuts.map((x, i) => ({
+    index: i,
+    value: diff_eval(values[PB], x[0], x[1])
+    }));
+    trim_assignments[PB] = pbUtilities.reduce((iMax, x, i, arr) => 
+    x.value > arr[iMax].value ? i : iMax, 0
+    );
+
+    // Step 2: Find the best option for agent 0, excluding PB's choice
+    let availableOptions = [0, 1, 2].filter(i => i !== trim_assignments[PB]);
+    let agent0Utilities = availableOptions.map(i => ({
+    index: i,
+    value: diff_eval(values[0], originalCuts[i][0], originalCuts[i][1])
+    }));
+    trim_assignments[0] = agent0Utilities.reduce((iMax, x, i, arr) => 
+    x.value > arr[iMax].value ? i : iMax, 0
+    );
+    // Fix: We need to get the actual index, not the position in the reduced array
+    trim_assignments[0] = agent0Utilities[trim_assignments[0]].index;
+
+    // Step 3: PA gets the remaining option
+    trim_assignments[PA] = [0, 1, 2].find(i => 
+    i !== trim_assignments[PB] && 
+    i !== trim_assignments[0]
+    );
 
     
     colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
@@ -455,34 +478,34 @@ selfridge_conway()
 
 
 
-    function showStep(stepIndex) {
-        const container = document.getElementById('visualization-container');
+function showStep(stepIndex) {
+    const container = document.getElementById('visualization-container');
 
-        agents = ["P1","P2","P3"]
-        if (stepIndex == 7){
-            document.getElementById(agents[PA]).innerHTML = agents[PA] + ", PA"
-            document.getElementById(agents[PB]).innerHTML = agents[PB] + ", PB"
-        }else if(stepIndex < 7){
-            document.getElementById(agents[1]).innerHTML = agents[PA]
-            document.getElementById(agents[2]).innerHTML = agents[PB]
-        }
-        
-        const sortedPieces = [...steps[stepIndex].pieces].sort((a, b) => a.range[0] - b.range[0]);
-    
-
-        container.innerHTML = `
-            <h2 style="height:2.5em">${steps[stepIndex].title}</h2>
-            <div class="cake-container">
-                ${sortedPieces.map(piece => `
-                    <div class="cake-piece" 
-                            style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
-                                   background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
-                                   border-color:${piece.color}">
-                    </div>
-                `).join('')}
-            </div>
-        `;
+    agents = ["P1", "P2", "P3"]
+    if (stepIndex == 7) {
+        document.getElementById(agents[PA]).innerHTML = agents[PA] + ", PA"
+        document.getElementById(agents[PB]).innerHTML = agents[PB] + ", PB"
+    } else if (stepIndex < 7) {
+        document.getElementById(agents[1]).innerHTML = agents[PA]
+        document.getElementById(agents[2]).innerHTML = agents[PB]
     }
+    
+    const sortedPieces = [...steps[stepIndex].pieces].sort((a, b) => a.range[0] - b.range[0]);
+
+    container.innerHTML = `
+        <h2 style="height:2.5em">${steps[stepIndex].title}</h2>
+        <div class="cake-container">
+            ${sortedPieces.map(piece => `
+                <div class="cake-piece" 
+                        style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
+                               background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
+                               border-color:${piece.color};
+                               display:${isNaN(piece.range[0]) || piece.range[0] === piece.range[1] ? 'none' : 'inline-block'}">
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
     
     
 
