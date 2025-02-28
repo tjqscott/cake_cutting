@@ -5,7 +5,7 @@ google.charts.setOnLoadCallback(drawChart);
 let values = [];
 let position = undefined;
 let agent = 1;
-let modal_up = 1;
+let modal_hidden = 1;
 
 function generateRandomArray(length, maxValue) {
     // Create an empty array
@@ -30,12 +30,14 @@ for (i=0;i<3;i++){
 var chart;
 
 function toggleModal() {
-    if (modal_up) {
-        modal_up = false;
+    if (modal_hidden) {
+        // Modal is opened
+        modal_hidden = false;
         document.getElementById("blur").style.visibility = "visible";
         document.getElementById("modal").style.visibility = "visible";
     } else {
-        modal_up = true;
+        // Modal is closed
+        modal_hidden = true;
         document.getElementById("modal").style.visibility = "hidden";
         document.getElementById("blur").style.visibility = "hidden";
         if (values[agent].length == 0){
@@ -43,6 +45,8 @@ function toggleModal() {
             position = 0
             chart.setSelection([{ row: position * 3 +1, column: 2 }])
         }
+        selfridge_conway()
+        showStep(currentStep)
     }
 }
 
@@ -251,65 +255,64 @@ function diff_eval(preference_values, start_position, end_position){
     return evaluate(preference_values, end_position) - evaluate(preference_values, start_position)
 }
 
+function selfridge_conway(){
+    // P1 cuts the cake into three pieces they consider of equal size
+    agent_a_initial_cuts = [[0,cut(values[0], 1/3)], [cut(values[0], 1/3),cut(values[0], 2/3)], [cut(values[0], 2/3),1]]
+    save_initial_cuts = agent_a_initial_cuts.slice()
 
-// P1 cuts the cake into three pieces they consider of equal size
-agent_a_initial_cuts = [[0,cut(values[0], 1/3)], [cut(values[0], 1/3),cut(values[0], 2/3)], [cut(values[0], 2/3),1]]
-save_initial_cuts = agent_a_initial_cuts.slice()
+    // P2 trims their favourite piece, making it equal to their second
+    agent_b_initial_evaluations = agent_a_initial_cuts.map(x => diff_eval(values[1], x[0], x[1]))
 
-// P2 trims their favourite piece, making it equal to their second
-agent_b_initial_evaluations = agent_a_initial_cuts.map(x => diff_eval(values[1], x[0], x[1]))
+    agent_b_favourite_index = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+    agent_b_initial_evaluations[agent_b_favourite_index] = -1
 
-agent_b_favourite_index = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-agent_b_initial_evaluations[agent_b_favourite_index] = -1
+    agent_b_second_favourite_value = agent_b_initial_evaluations[agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)]
+    agent_b_second_favourite_index = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)
 
-agent_b_second_favourite_value = agent_b_initial_evaluations[agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)]
-agent_b_second_favourite_index = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)
+    trim = [-1, agent_a_initial_cuts[agent_b_favourite_index][1]]
 
-trim = [-1, agent_a_initial_cuts[agent_b_favourite_index][1]]
+    agent_a_initial_cuts[agent_b_favourite_index] = [agent_a_initial_cuts[agent_b_favourite_index][0], diff_cut(values[1], agent_a_initial_cuts[agent_b_favourite_index][0], agent_b_second_favourite_value)]
+    trim = [agent_a_initial_cuts[agent_b_favourite_index][1],trim[1]]
 
-agent_a_initial_cuts[agent_b_favourite_index] = [agent_a_initial_cuts[agent_b_favourite_index][0], diff_cut(values[1], agent_a_initial_cuts[agent_b_favourite_index][0], agent_b_second_favourite_value)]
-trim = [agent_a_initial_cuts[agent_b_favourite_index][1],trim[1]]
-
-save_trimmed_cuts = agent_a_initial_cuts.slice()
+    save_trimmed_cuts = agent_a_initial_cuts.slice()
 
 
-agent_c_evaluations = agent_a_initial_cuts.map(x => diff_eval(values[2], x[0], x[1]))
-agent_c_assignment = agent_c_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+    agent_c_evaluations = agent_a_initial_cuts.map(x => diff_eval(values[2], x[0], x[1]))
+    agent_c_assignment = agent_c_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
 
-if (agent_b_favourite_index == agent_c_assignment){
-    PA = 2
-    PB = 1
-    agent_b_assignment = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)
-}else{
-    PA = 1
-    PB = 2
-    agent_b_assignment = agent_b_favourite_index
+    if (agent_b_favourite_index == agent_c_assignment){
+        PA = 2
+        PB = 1
+        agent_b_assignment = agent_b_initial_evaluations.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0)
+    }else{
+        PA = 1
+        PB = 2
+        agent_b_assignment = agent_b_favourite_index
+    }
+
+    agent_a_assignment = [0,1,2].filter(item => ![agent_b_assignment, agent_c_assignment].includes(item));
+
+    main_assignments = [agent_a_assignment[0], agent_b_assignment, agent_c_assignment]
+
+    agent_PA_trim_value = diff_eval(values[PA], trim[0], trim[1])
+    agent_PA_trim_cuts = [[trim[0],diff_cut(values[PA], trim[0], agent_PA_trim_value/3)],[diff_cut(values[PA], trim[0], agent_PA_trim_value/3),diff_cut(values[PA], trim[0], 2*agent_PA_trim_value/3)],[diff_cut(values[PA], trim[0], 2*agent_PA_trim_value/3),trim[1]]]
+
+    save_trim_piece_cuts = agent_PA_trim_cuts.slice()
+
+    save_stretched_trim_cuts = agent_PA_trim_cuts.map(([start, end]) => [(start - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0]), (end - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])]);
+
+    trim_assignments = [-1,-1,-1]
+    trim_assignments[PB] = agent_PA_trim_cuts.map(x => diff_eval(values[PB], x[0], x[1])).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+    trim_trim_temp = agent_PA_trim_cuts[trim_assignments[PB]]
+    agent_PA_trim_cuts[trim_assignments[PB]] = [0,0]
+
+    trim_assignments[0] = agent_PA_trim_cuts.map(x => diff_eval(values[0], x[0], x[1])).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
+    trim_assignments[PA] = [0,1,2].filter(item => !trim_assignments.includes(item))[0];
+
+    agent_PA_trim_cuts[trim_assignments[PB]] = trim_trim_temp
 }
 
-agent_a_assignment = [0,1,2].filter(item => ![agent_b_assignment, agent_c_assignment].includes(item));
-
-main_assignments = [agent_a_assignment[0], agent_b_assignment, agent_c_assignment]
-
-agent_PA_trim_value = diff_eval(values[PA], trim[0], trim[1])
-agent_PA_trim_cuts = [[trim[0],diff_cut(values[PA], trim[0], agent_PA_trim_value/3)],[diff_cut(values[PA], trim[0], agent_PA_trim_value/3),diff_cut(values[PA], trim[0], 2*agent_PA_trim_value/3)],[diff_cut(values[PA], trim[0], 2*agent_PA_trim_value/3),trim[1]]]
-
-save_trim_piece_cuts = agent_PA_trim_cuts.slice()
-
-save_stretched_trim_cuts = agent_PA_trim_cuts.map(([start, end]) => [(start - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0]), (end - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])]);
-
-trim_assignments = [-1,-1,-1]
-trim_assignments[PB] = agent_PA_trim_cuts.map(x => diff_eval(values[PB], x[0], x[1])).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-trim_trim_temp = agent_PA_trim_cuts[trim_assignments[PB]]
-agent_PA_trim_cuts[trim_assignments[PB]] = [0,0]
-
-trim_assignments[0] = agent_PA_trim_cuts.map(x => diff_eval(values[0], x[0], x[1])).reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
-trim_assignments[PA] = [0,1,2].filter(item => !trim_assignments.includes(item))[0];
-
-agent_PA_trim_cuts[trim_assignments[PB]] = trim_trim_temp
-
-console.log(diff_eval(values[0], agent_a_initial_cuts[main_assignments[0]][0], agent_a_initial_cuts[main_assignments[0]][1])+ diff_eval(values[0], agent_PA_trim_cuts[trim_assignments[0]][0], agent_PA_trim_cuts[trim_assignments[0]][1]))
-console.log(diff_eval(values[1], agent_a_initial_cuts[main_assignments[1]][0], agent_a_initial_cuts[main_assignments[1]][1])+ diff_eval(values[1], agent_PA_trim_cuts[trim_assignments[1]][0], agent_PA_trim_cuts[trim_assignments[1]][1]))
-console.log(diff_eval(values[2], agent_a_initial_cuts[main_assignments[2]][0], agent_a_initial_cuts[main_assignments[2]][1])+ diff_eval(values[2], agent_PA_trim_cuts[trim_assignments[2]][0], agent_PA_trim_cuts[trim_assignments[2]][1]))
+selfridge_conway()
 
 colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
 
@@ -348,8 +351,8 @@ colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
                 ...save_trimmed_cuts.map((cut, index) => ({
                     range: cut,
                     color: (index === agent_c_assignment) 
-                        ? "#B5FFFF" // Pastel cyan for Charlie's piece
-                        : "#d3d3d3" // Grey for the rest
+                        ? "#B5FFFF" 
+                        : "#d3d3d3"
                 }))
             ]
         },
@@ -405,15 +408,15 @@ colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
             title: "Then Player A picks their favourite piece of the trimming",
             pieces: save_stretched_trim_cuts.map((range, index) => ({
                 range: save_stretched_trim_cuts[index], 
-                color: (range === save_stretched_trim_cuts[trim_assignments[PA]]) ? colours[PA] : "#d3d3d3" 
+                color: (index === trim_assignments[PA]) ? colours[PA] : "#d3d3d3" 
             }))
         },
         {
             title: "Player 1 Picks next",
             pieces: save_stretched_trim_cuts.map((range, index) => ({
                 range: save_stretched_trim_cuts[index], 
-                color: (range === save_stretched_trim_cuts[trim_assignments[PA]]) ? colours[PA] 
-                    : (range === save_stretched_trim_cuts[trim_assignments[0]]) ? colours[0]
+                color: (index === trim_assignments[PA]) ? colours[PA] 
+                    : (index === trim_assignments[0]) ? colours[0]
                     : "#d3d3d3"
             }))
         },
@@ -421,8 +424,8 @@ colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
             title: "Finally, Player B is left with the last piece of the trimming",
             pieces: save_stretched_trim_cuts.map((range, index) => ({
                 range: save_stretched_trim_cuts[index],
-                color: (range === save_stretched_trim_cuts[trim_assignments[PA]]) ? colours[PA]
-                    : (range === save_stretched_trim_cuts[trim_assignments[0]]) ? colours[0] 
+                color: (index === trim_assignments[PA]) ? colours[PA] 
+                    : (index === trim_assignments[0]) ? colours[0]
                     : colours[PB] 
             }))
         },
@@ -449,7 +452,6 @@ colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
     function showStep(stepIndex) {
         const container = document.getElementById('visualization-container');
 
-
         agents = ["P1","P2","P3"]
         if (stepIndex == 7){
             document.getElementById(agents[PA]).innerHTML = agents[PA] + ", PA"
@@ -461,6 +463,7 @@ colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
         
         const sortedPieces = [...steps[stepIndex].pieces].sort((a, b) => a.range[0] - b.range[0]);
     
+
         container.innerHTML = `
             <h2 style="height:2.5em">${steps[stepIndex].title}</h2>
             <div class="cake-container">
