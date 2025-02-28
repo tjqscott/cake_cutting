@@ -190,6 +190,7 @@ numberInput.addEventListener('invalid', function() {
 });
 
 
+steps = []
 
 // Cake cutting logic
 
@@ -310,14 +311,12 @@ function selfridge_conway(){
     trim_assignments[PA] = [0,1,2].filter(item => !trim_assignments.includes(item))[0];
 
     agent_PA_trim_cuts[trim_assignments[PB]] = trim_trim_temp
-}
 
-selfridge_conway()
+    
+    colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
 
-colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
-
-// Visualisation and stepping
-    const steps = [
+    // Visualisation and stepping
+    steps = [
         {
             title: "We have a cake which must be shared between three people!",
             pieces: [
@@ -448,6 +447,13 @@ colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
         }
         
     ];
+
+
+}
+
+selfridge_conway()
+
+
 
     function showStep(stepIndex) {
         const container = document.getElementById('visualization-container');
