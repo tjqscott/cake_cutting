@@ -280,8 +280,8 @@ button[style*="background-color: gray"]:hover {
 .hidden { display: none; }
 
 .cake-piece {
-    aspect-ratio: 3;
     border-radius: 5px;
+    height: 18.08vh;
     display: inline-block;
     border: thick solid #d3d3d3;
     margin: 0 -2px;
