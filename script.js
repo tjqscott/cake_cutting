@@ -7,6 +7,7 @@ let position = undefined;
 let agent = 1;
 let modal_hidden = 1;
 
+
 function generateRandomArray(length, maxValue) {
     // Create an empty array
     const randomArray = [];
@@ -275,6 +276,8 @@ function selfridge_conway(){
     agent_a_initial_cuts[agent_b_favourite_index] = [agent_a_initial_cuts[agent_b_favourite_index][0], diff_cut(values[1], agent_a_initial_cuts[agent_b_favourite_index][0], agent_b_second_favourite_value)]
     trim = [agent_a_initial_cuts[agent_b_favourite_index][1],trim[1]]
 
+    no_trim = Math.abs(trim[0] - trim[1]) < 0.0001 || isNaN(trim[0])
+
     save_trimmed_cuts = agent_a_initial_cuts.slice()
 
 
@@ -336,7 +339,7 @@ function selfridge_conway(){
     );
 
     
-    colours = ["#FFB5B5", "#FFFFB5", "#B5FFFF" ]
+    colours = ["#DE9F9F", "#DEDE9F", "#9FDEDE"]
 
     // Visualisation and stepping
     steps = [
@@ -349,9 +352,9 @@ function selfridge_conway(){
         {
             title: "Player 1 splits the cake into three pieces that they value equally",
             pieces: [
-                { range: save_initial_cuts[0], color: "#FFB5B5" },
-                { range: save_initial_cuts[1], color: "#FFB5B5" },
-                { range: save_initial_cuts[2], color: "#FFB5B5" }
+                { range: save_initial_cuts[0], color: colours[0] },
+                { range: save_initial_cuts[1], color: colours[0] },
+                { range: save_initial_cuts[2], color: colours[0] }
             ]
         },
         {
@@ -361,7 +364,7 @@ function selfridge_conway(){
                 ...save_trimmed_cuts.map((cut, index) => ({
                     range: cut,
                     color: (index === agent_b_favourite_index || index === agent_b_second_favourite_index) 
-                        ? "#FFFFB5" 
+                        ? colours[1] 
                         : "#d3d3d3" 
                 }))
             ]
@@ -373,7 +376,7 @@ function selfridge_conway(){
                 ...save_trimmed_cuts.map((cut, index) => ({
                     range: cut,
                     color: (index === agent_c_assignment) 
-                        ? "#B5FFFF" 
+                        ? colours[2] 
                         : "#d3d3d3"
                 }))
             ]
@@ -385,9 +388,9 @@ function selfridge_conway(){
                 ...save_trimmed_cuts.map((cut, index) => ({
                     range: cut,
                     color: (index === agent_c_assignment) 
-                        ? "#B5FFFF" 
+                        ? colours[2] 
                         : (index === agent_b_assignment) 
-                            ? "#FFFFB5" 
+                            ? colours[1] 
                             : "#d3d3d3" 
                 }))
             ]
@@ -399,15 +402,20 @@ function selfridge_conway(){
                 ...save_trimmed_cuts.map((cut, index) => ({
                     range: cut,
                     color: (index === agent_c_assignment) 
-                        ? "#B5FFFF"
+                        ? colours[2]
                         : (index === agent_b_assignment) 
-                            ? "#FFFFB5" 
-                            : "#FFB5B5" 
+                            ? colours[1] 
+                            : colours[0] 
                 }))
             ]
         },
         {
-            title: "Now we have to divide up the trimming which Player 2 left",
+            title: 
+            no_trim ? 
+            "There is no trim piece so we can jump right to the final evaluation!"
+            :
+            "Now we have to divide up the trimming which Player 2 left"
+            ,
             pieces: [
                 {range: [0,1], color:"#d3d3d3"}
             ]
@@ -421,9 +429,9 @@ function selfridge_conway(){
         {
             title: "Player B trims the trimming into three pieces which they value equally",
             pieces: [
-                { range: save_stretched_trim_cuts[0], color: (PB === 1) ? "#FFFFB5" : "#B5FFFF" },
-                { range: save_stretched_trim_cuts[1], color: (PB === 1) ? "#FFFFB5" : "#B5FFFF" },
-                { range: save_stretched_trim_cuts[2], color: (PB === 1) ? "#FFFFB5" : "#B5FFFF" }
+                { range: save_stretched_trim_cuts[0], color: (PB === 1) ? colours[1] : colours[2] },
+                { range: save_stretched_trim_cuts[1], color: (PB === 1) ? colours[1] : colours[2] },
+                { range: save_stretched_trim_cuts[2], color: (PB === 1) ? colours[1] : colours[2] }
             ]
         },
         {
@@ -471,6 +479,17 @@ function selfridge_conway(){
         
     ];
 
+    if (no_trim){
+        for (i = 7; i < 12 ; i++){
+            element = document.getElementById(i)
+            element.innerHTML = "<strike>"+ element.innerText +"</strike>"
+        }
+    }else{
+        for (i = 7; i < 12 ; i++){
+            element = document.getElementById(i)
+            element.innerHTML = element.innerText
+        }
+    }
 
 }
 
@@ -486,21 +505,21 @@ function showStep(stepIndex) {
         document.getElementById(agents[PA]).innerHTML = agents[PA] + ", PA"
         document.getElementById(agents[PB]).innerHTML = agents[PB] + ", PB"
     } else if (stepIndex < 7) {
-        document.getElementById(agents[1]).innerHTML = agents[PA]
-        document.getElementById(agents[2]).innerHTML = agents[PB]
+        document.getElementById("P2").innerHTML = "P2"
+        document.getElementById("P3").innerHTML = "P3"
     }
     
     const sortedPieces = [...steps[stepIndex].pieces].sort((a, b) => a.range[0] - b.range[0]);
 
     container.innerHTML = `
-        <h2 style="height:2.5em">${steps[stepIndex].title}</h2>
+        <h3 id="title_container" style="height:2.5em">${steps[stepIndex].title}</h3>
         <div class="cake-container">
             ${sortedPieces.map(piece => `
                 <div class="cake-piece" 
                         style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
                                background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
                                border-color:${piece.color};
-                               display:${isNaN(piece.range[0]) || piece.range[0] === piece.range[1] ? 'none' : 'inline-block'}">
+                               display:${isNaN(piece.range[0]) || Math.abs(piece.range[0] - piece.range[1]) < 0.0001 ? 'none' : 'inline-block'}">
                 </div>
             `).join('')}
         </div>
@@ -519,6 +538,9 @@ function restart() {
 function next() {
     document.getElementById(currentStep).classList.remove("active");
     currentStep++;
+    if (no_trim && currentStep == 7){
+        currentStep += 5
+    }
     if (currentStep == 13) {
         currentStep = 0;
     } 
@@ -529,12 +551,16 @@ function next() {
 function previous() {
     document.getElementById(currentStep).classList.remove("active");
     currentStep--;
+    if (no_trim && currentStep == 11){
+        currentStep -= 5
+    }
     if (currentStep == -1) {
         currentStep = 12;
     } 
     showStep(currentStep);
     document.getElementById(currentStep).classList.add("active");
 }
+
 
 
 

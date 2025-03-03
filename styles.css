@@ -317,4 +317,10 @@ button[style*="background-color: gray"]:hover {
     vertical-align: top;
     background-image: url("assets/cake.png");
     background-size: cover;
+    margin-left:5px;
+}
+
+#title_container{
+    padding-left: 2em;
+    padding-right: 2em;
 }
