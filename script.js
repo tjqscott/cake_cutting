@@ -482,7 +482,7 @@ function selfridge_conway(){
     if (no_trim){
         for (i = 7; i < 12 ; i++){
             element = document.getElementById(i)
-            element.innerHTML = "<strike>"+ element.innerText +"</strike>"
+            element.innerHTML = "<s style='text-decoration-thickness: 2px'>"+ element.innerText +"</s>"
         }
     }else{
         for (i = 7; i < 12 ; i++){
