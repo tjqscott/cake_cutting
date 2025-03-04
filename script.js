@@ -585,8 +585,8 @@ function restart() {
 function next() {
     document.getElementById(currentStep).classList.remove("active");
     currentStep++;
-    if (no_trim && currentStep == 7){
-        currentStep += 5
+    if (no_trim && currentStep > 6 &&  currentStep < 12){
+        currentStep = 12
     }
     if (currentStep == 13) {
         currentStep = 0;
@@ -598,8 +598,8 @@ function next() {
 function previous() {
     document.getElementById(currentStep).classList.remove("active");
     currentStep--;
-    if (no_trim && currentStep == 11){
-        currentStep -= 5
+    if (no_trim && currentStep > 6 &&  currentStep < 12){
+        currentStep = 6
     }
     if (currentStep == -1) {
         currentStep = 12;
