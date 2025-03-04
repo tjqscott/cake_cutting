@@ -323,7 +323,7 @@ function selfridge_conway(){
     agent_a_initial_cuts[agent_b_favourite_index] = [agent_a_initial_cuts[agent_b_favourite_index][0], diff_cut(values[1], agent_a_initial_cuts[agent_b_favourite_index][0], agent_b_second_favourite_value)]
     trim = [agent_a_initial_cuts[agent_b_favourite_index][1],trim[1]]
 
-    no_trim = Math.abs(trim[0] - trim[1]) < 0.0001 || isNaN(trim[0])
+    no_trim = Math.abs(trim[0] - trim[1]) < 0.0000001 || isNaN(trim[0])
 
     save_trimmed_cuts = agent_a_initial_cuts.slice()
 
@@ -566,7 +566,7 @@ function showStep(stepIndex) {
                         style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
                                background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
                                border-color:${piece.color};
-                               display:${isNaN(piece.range[0]) || Math.abs(piece.range[0] - piece.range[1]) < 0.0001 ? 'none' : 'inline-block'}">
+                               display:${isNaN(piece.range[0]) || Math.abs(piece.range[0] - piece.range[1]) < 0.0000001 ? 'none' : 'inline-block'}">
                 </div>
             `).join('')}
         </div>
@@ -587,6 +587,9 @@ function next() {
     currentStep++;
     if (no_trim && currentStep > 6 &&  currentStep < 12){
         currentStep = 12
+    }
+    if (currentStep == 12 && playing){
+        togglePlaying()
     }
     if (currentStep == 13) {
         currentStep = 0;
