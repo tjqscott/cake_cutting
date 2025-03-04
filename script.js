@@ -7,6 +7,53 @@ let position = undefined;
 let agent = 1;
 let modal_hidden = 1;
 
+let playing = false;
+let intervalId;
+let progressInterval;
+
+function togglePlaying() {
+    playing = !playing;
+    let icon = playing ? "./assets/controls/pause.png" : "./assets/controls/play.png";
+    document.getElementById("play/pause").src = icon;
+    let progressBar = document.getElementById("progress-bar");
+    let progressContainer = document.getElementById("progress-container");
+    
+    if (playing) {
+        progressContainer.style.display = "block"
+        progressBar.classList.remove("reset-transition"); // Ensure reset is instant
+        progressBar.style.width = "0%";
+        void progressBar.offsetWidth; // Force reflow to apply the change
+        
+        let progress = 0;
+        intervalId = setInterval(() => {
+            next();
+            progress = 0;
+            progressBar.classList.add("reset-transition"); // Disable smooth transition for reset
+            progressBar.style.width = "0%";
+            void progressBar.offsetWidth;
+            progressBar.classList.remove("reset-transition"); // Enable smooth transition after reset
+        }, 5000);
+
+        progressInterval = setInterval(() => {
+            if (progress >= 100) {
+                progress = 100; // Ensure it stays at full before resetting
+            } else {
+                progress += 2;
+                progressBar.classList.add("smooth-transition"); // Ensure smooth transition when increasing
+                progressBar.style.width = `${progress}%`;
+            }
+        }, 100);
+    } else {
+        progressContainer.style.display = "none"
+        clearInterval(intervalId);
+        clearInterval(progressInterval);
+        progressBar.classList.add("reset-transition"); // Ensure reset is instant when stopping
+        progressBar.style.width = "0%";
+    }
+}
+
+
+
 
 function generateRandomArray(length, maxValue) {
     // Create an empty array

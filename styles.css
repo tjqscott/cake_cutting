@@ -183,6 +183,7 @@ h1, h2 {
 
 .controls-container {
     height: 100%;
+
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -304,7 +305,8 @@ button[style*="background-color: gray"]:hover {
     width: 5vh;
     display: inline-block;
     padding: 1vh;
-    padding-top: 3vh;
+    padding-top: 1vh;
+    padding-bottom: 1vh;
 }
 
 .hidden { display: none; }
@@ -323,4 +325,32 @@ button[style*="background-color: gray"]:hover {
 #title_container{
     padding-left: 2em;
     padding-right: 2em;
+}
+
+#progress-container {
+    display: none;
+    width: 27vh;
+    margin-top:0.5em;
+    height: 5px;
+    background-color: #ddd;
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom:-2em;
+    position:relative;
+    bottom:0.5em;
+}
+
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: #ffffff; 
+    transition: width 0.1s linear;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.reset-transition {
+    transition: none !important;
 }

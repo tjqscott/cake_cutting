@@ -63,11 +63,14 @@
                 </div>
             </div>
 
+
             <img class="controls" onclick="restart()" title="Restart" src="./assets/controls/restart.png">
             <img class="controls" onclick="previous()" title="Previous step" src="./assets/controls/previous.png">
-            <img class="controls" title="Play" src="./assets/controls/play.png">
-            <img class="controls hidden" title="Pause" src="./assets/controls/pause.png">
+            <img class="controls" onclick="togglePlaying()" id="play/pause" title="Play/ Pause" src="./assets/controls/play.png">
             <img class="controls" onclick="next()" title="Next step" src="./assets/controls/next.png">
+
+            <div id="progress-container"><div id="progress-bar"></div></div>
+
 
             <br><br>
 
