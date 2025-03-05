@@ -561,18 +561,45 @@ function showStep(stepIndex) {
     const sortedPieces = [...steps[stepIndex].pieces].sort((a, b) => a.range[0] - b.range[0]);
 
     container.innerHTML = `
-        <h3 id="title_container" style="height:2.5em">${steps[stepIndex].title}</h3>
-        <div class="cake-container">
-            ${sortedPieces.map(piece => `
-                <div class="cake-piece" 
-                        style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
-                               background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
-                               border-color:${piece.color};
-                               display:${isNaN(piece.range[0]) || Math.abs(piece.range[0] - piece.range[1]) < 0.0000001 ? 'none' : 'inline-block'}">
+    <h3 id="title_container" style="height:2.5em">${steps[stepIndex].title}</h3>
+    <div class="cake-container">
+        ${sortedPieces.map((piece, pieceIndex) => `
+            <div class="cake-piece" 
+                    style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
+                           background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
+                           border-color:${piece.color};
+                           display:${isNaN(piece.range[0]) || Math.abs(piece.range[0] - piece.range[1]) < 0.0000001 ? 'none' : 'inline-block'}">
+                           
+                <div class="hover-info" >
+                    <p style="color:black">(${
+                        // Check if the current piece index is in save_stretched_trim_cuts
+                        save_stretched_trim_cuts.includes(piece.range) 
+                            ? save_trim_piece_cuts[save_stretched_trim_cuts.indexOf(piece.range)][0].toFixed(4) 
+                            : piece.range[0].toFixed(4)
+                    }, ${
+                        // Check if the current piece index is in save_stretched_trim_cuts
+                        save_stretched_trim_cuts.includes(piece.range) 
+                            ? save_trim_piece_cuts[save_stretched_trim_cuts.indexOf(piece.range)][1].toFixed(4) 
+                            : piece.range[1].toFixed(4)
+                    })</p>
+                    ${values
+                    .map((agent, index) => 
+                        `<p style="color:${colours[index]}"> value: ${
+                            // Use the updated range for calculating diff_eval if the piece is in save_stretched_trim_cuts
+                            save_stretched_trim_cuts.includes(piece.range)
+                                ? diff_eval(agent, 
+                                    save_trim_piece_cuts[save_stretched_trim_cuts.indexOf(piece.range)][0], 
+                                    save_trim_piece_cuts[save_stretched_trim_cuts.indexOf(piece.range)][1]
+                                ).toFixed(4)
+                                : diff_eval(agent, piece.range[0], piece.range[1]).toFixed(4)
+                        }</p>`
+                    )
+                    .join("") }
                 </div>
-            `).join('')}
-        </div>
-    `;
+            </div>
+        `).join('')}
+    </div>
+`;
 }
     
     

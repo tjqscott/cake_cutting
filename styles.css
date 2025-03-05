@@ -355,3 +355,20 @@ button[style*="background-color: gray"]:hover {
     transition: none !important;
 }
 
+.hover-info{
+    min-width:20vh;
+    position:relative;
+    height:inherit;
+    position:absolute;
+    visibility: hidden;
+    background-color: white;
+    outline: thick solid #d3d3d3;
+    position: absolute;
+    left: 50%; 
+    top: 10vh;
+    transform: translateX(-50%); 
+}
+
+.cake-piece:hover .hover-info {
+    visibility: visible; /* Show on hover */
+}
