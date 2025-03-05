@@ -466,13 +466,14 @@ function selfridge_conway(){
             "Now we have to divide up the trimming which Player 2 left"
             ,
             pieces: [
-                {range: [0,1], color:"#d3d3d3"}
+                { range: trim, color: "green" },
+                ...save_trimmed_cuts.map(x => ({ range: x, color: "#d3d3d3" }))
             ]
         },
         {
             title: "We call whoever ended up with the trimmed piece Player A and whichever of Player 2 and Player 3 didn't Player B",
             pieces: [
-                {range: [0,1], color:"#d3d3d3"}
+                {range: trim, color:"green"}
             ]
         },
         {
@@ -565,8 +566,8 @@ function showStep(stepIndex) {
     <div class="cake-container">
         ${sortedPieces.map((piece, pieceIndex) => `
             <div class="cake-piece" 
-                    style="width:${(piece.range[1] - piece.range[0]) * 70}%; 
-                           background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
+                    style="width:${ piece.range == trim && sortedPieces.length == 1 ? "70" : (piece.range[1] - piece.range[0]) * 70}%; 
+                           background-position: ${piece.range == trim && sortedPieces.length == 1 ? 0 :-(container.clientWidth * 0.7) * piece.range[0]}px 0;
                            border-color:${piece.color};
                            display:${isNaN(piece.range[0]) || Math.abs(piece.range[0] - piece.range[1]) < 0.0000001 ? 'none' : 'inline-block'}">
                            
