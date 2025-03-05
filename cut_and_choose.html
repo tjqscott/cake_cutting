@@ -30,12 +30,8 @@
 						<p id="P1">P1</p>
 					</div>
 					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(1)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(60deg)">
+						<img title="Click to edit" onclick="setAgent(1)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(180deg)">
 						<p id="P2">P2</p>
-					</div>
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(2)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(180deg)">
-						<p id="P3">P3</p>
 					</div>
 				</div>
 				<div class="input_container hidden">
@@ -54,6 +50,7 @@
                     background-size: cover; background-position: center; border-radius: 5px;
                     border-width:thick; border-color:white; border-style:solid;"></div>
 				</div>
+				<div>
 				<img class="controls" onclick="restart()" title="Restart" src="./assets/controls/restart.png">
 				<img class="controls" onclick="previous()" title="Previous step" src="./assets/controls/previous.png">
 				<img class="controls" onclick="togglePlaying()" id="play/pause" title="Play/ Pause" src="./assets/controls/play.png">
@@ -61,29 +58,17 @@
 				<div id="progress-container">
 					<div id="progress-bar"></div>
 				</div>
-				<br>
-				<br>
-				<div class="code-container">
-					<div id="0" class="row even active">Main cake:</div>
-					<div id="1" class="row odd indent">P1 cuts the cake into three pieces they consider of equal size</div>
-					<div id="2" class="row even indent">P2 trims their favourite piece, making it equal to their second</div>
-					<div id="3" class="row odd indent">P3 chooses their favourite piece that isn't the trimming</div>
-					<div id="4" class="row even indent">P2 chooses next but has to take the trimmed piece if P3 didn't</div>
-					<div id="5" class="row odd indent">P1 takes the remaining piece just leaving the trimming</div>
-					<div id="6" class="row even">Trimming:</div>
-					<div id="7" class="row odd indent">We call P1 & P2 PA & PB where PA took the trimmed piece</div>
-					<div id="8" class="row even indent">PB cuts the trimming into three piece that they value equally</div>
-					<div id="9" class="row odd indent">First, PA chooses their favourite piece of the trimming</div>
-					<div id="10" class="row even indent">Then, P1 chooses their favourite of the remaining pieces</div>
-					<div id="11" class="row odd indent">Finally, PB gets the last remaining piece of the trimming</div>
-					<div id="12" class="row even">Then we can combine the trim assignments to the main ones</div>
 				</div>
-				<br>
-				<br>
-				<br>
-				<br>
+
+				<div class="code-container">
+					<div id="0" class="row even active">We have a cake which must be divided between two players</div>
+					<div id="1" class="row odd">Player 1 cuts the cake into two pieces which he values equally</div>
+					<div id="2" class="row even">Player 2 choose the piece that they think is the most valuable</div>
+					<div id="3" class="row odd">Player 1 then happily takes the remaining piece of the cake </div>
+				</div>
+
 			</center>
 		</div>
-		<script src="script.js"></script>
+		<script src="cut_and_choose.js"></script>
 	</body>
 </html>
