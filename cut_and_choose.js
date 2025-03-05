@@ -6,7 +6,7 @@ google.charts.setOnLoadCallback(drawChart);
 
 let values = [];
 let position = undefined;
-let agent = 1;
+let agent = 0;
 let modal_hidden = 1;
 
 colours = ["#DE9F9F", "#9FDEDE"]
@@ -267,7 +267,8 @@ function clearChart() {
 }
 
 function setAgent(n) {
-    if (agent != n) {
+    console.log(agent)
+    if (agent != n || position == undefined) {
         agent = n;
         position = values[agent].length - 1;
     }

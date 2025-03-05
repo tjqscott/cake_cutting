@@ -265,7 +265,7 @@ function clearChart() {
 }
 
 function setAgent(n) {
-    if (agent != n) {
+    if (agent != n || position == undefined) {
         agent = n;
         position = values[agent].length - 1;
     }
