@@ -24,41 +24,13 @@
 					</div>
 				</div>
 				<h1>Cake Cutting Algorithm Visualisations</h1>
+				<select id="pageDropdown" onchange="switchPage(this.value)">
+					<option value="dubins_spanier.html">Dubins Spanier Algorithm</option>
+					<option value="index.html">Two player cut and choose</option>
+					<option value="selfridge_conway.html">3 Player Selfridge-Conway</option>
+				</select>
 				<div id="agent_container">
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(0)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(0deg)">
-						<p id="P1">P1</p>
-					</div>
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(1)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(45deg)">
-						<p id="P2">P2</p>
-					</div>
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(2)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(90deg)">
-						<p id="P3">P3</p>
-					</div>
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(3)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(135deg)">
-						<p id="P4">P4</p>
-					</div>
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(4)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(180deg)">
-						<p id="P5">P5</p>
-					</div>
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(5)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(225deg)">
-						<p id="P6">P6</p>
-					</div>
-					
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(6)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(270deg)">
-						<p id="P7">P7</p>
-					</div>
-					
-					<div class="agent_wrapper">
-						<img title="Click to edit" onclick="setAgent(7)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(315deg)">
-						<p id="P8">P8</p>
-					</div>
+
 				</div>
 				<div class="input_container hidden">
 					<h2>We have a cake which must be shared between three people</h2>

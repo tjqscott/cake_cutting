@@ -24,6 +24,11 @@
 					</div>
 				</div>
 				<h1>Cake Cutting Algorithm Visualisations</h1>
+				<select id="pageDropdown" onchange="switchPage(this.value)">
+					<option value="selfridge_conway.html">3 Player Selfridge-Conway</option>
+					<option value="index.html">Two player cut and choose</option>
+					<option value="dubins_spanier.html">Dubins Spanier Algorithm</option>
+				</select>
 				<div id="agent_container">
 					<div class="agent_wrapper">
 						<img title="Click to edit" onclick="setAgent(0)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(0deg)">

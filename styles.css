@@ -380,6 +380,49 @@ button[style*="background-color: gray"]:hover {
 	transform: translateX(-50%);
 }
 
+select {
+	padding: 10px;
+	font-size: 16px;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+	width: 100%;
+	max-width: 400px;
+}
+
 .cake-piece:hover .hover-info {
 	visibility: visible;
 }
+ .remove{
+	display:inline-block;
+	width:1em;
+	background-color:red;
+	border-radius: 100000px;
+	border: solid medium white;
+	margin-top: -2.5px;
+	margin-left: 0.5em;
+ }
+
+
+ .agent-text-container{
+	display:inline-block;
+	display:flex;
+	flex-direction: row;
+ }
+
+ #addPlayer{
+	display:inline-block;
+	height: inherit;
+	display:flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+ }
+
+ #addPlayer p{
+	
+	width:1em;
+	background-color:green;
+	border-radius: 100000px;
+	border: solid medium white;
+	font-size: 1.5em;
+ }

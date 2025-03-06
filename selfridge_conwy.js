@@ -13,6 +13,12 @@ let playing = false;
 let intervalId;
 let progressInterval;
 
+function switchPage(url) {
+    if (url) {
+        window.location.href = url;
+    }
+}
+
 function togglePlaying() {
     playing = !playing;
     let icon = playing ? "./assets/controls/pause.png" : "./assets/controls/play.png";

@@ -13,6 +13,12 @@ let playing = false;
 let intervalId;
 let progressInterval;
 
+function switchPage(url) {
+    if (url) {
+        window.location.href = url;
+    }
+}
+
 function togglePlaying() {
     playing = !playing;
     let icon = playing ? "./assets/controls/pause.png" : "./assets/controls/play.png";
@@ -72,9 +78,57 @@ function generateRandomArray(length, maxValue) {
 }
 
 // Charting logic and functions
+
+let player_count = Math.floor(Math.random() * 5) + 4;
+
+function drawAgents() {
+    let agent_container = document.getElementById("agent_container");
+    
+    // Clear the existing content before adding new elements
+    agent_container.innerHTML = "";
+    
+    for (let i = 0; i < player_count; i++) {
+        agent_container.innerHTML += `
+            <div class="agent_wrapper">
+                <img title="Click to edit" onclick="setAgent(${i})" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(${(i*(360/player_count))}deg)">
+                <div class="agent-text-container" ><p id="P${i+1}">P${i+1}</p><div class="remove" onclick="removeAgent(${i})">x</div></div>
+            </div>`;
+    }
+    
+    agent_container.innerHTML += 
+    `<div id="addPlayer" onclick="addAgent()"><p>+</p></div>`
+}
+
+// Call the function after the DOM is fully loaded
+drawAgents()
+
 // Initialize the values array with the provided data
-for (i = 0; i < 8; i++) {
+for (i = 0; i < player_count; i++) {
     values.push(generateRandomArray(20, 100))
+}
+
+function removeAgent(n){
+    if (player_count > 1){
+    restart()
+    values.splice(n, 1)
+    player_count --
+    drawAgents()
+    algorithm()
+    }else{
+        alert("You cant have zero players!")
+    }
+}
+
+function addAgent(){
+    if (player_count < 10){
+        restart()
+        values.push(generateRandomArray(20, 100))
+        player_count ++
+        drawAgents()
+        algorithm()
+    }else{
+        alert("Too many players!")
+    }
 }
 
 var chart;
@@ -99,7 +153,7 @@ function toggleModal() {
             }])
         }
         algorithm()
-        showStep(currentStep)
+        showStep(step_to_step(currentStep));
     }
 }
 
@@ -364,6 +418,7 @@ function getPlayerColor(playerIndex) {
 
 function algorithm(){
 
+
     position = 0
     player_count = values.length
     target = 1/player_count
@@ -482,16 +537,16 @@ function step_to_stack(n){
 
 
 function restart() {
-    document.getElementById(currentStep).classList.remove("active");
+    document.getElementById(step_to_stack(currentStep)).classList.remove("active");
     currentStep = 0;
-    showStep(currentStep);
-    document.getElementById(currentStep).classList.add("active");
+    showStep(step_to_step(currentStep));
+    document.getElementById(step_to_stack(currentStep)).classList.add("active");
 }
 
 function next() {
     document.getElementById(step_to_stack(currentStep)).classList.remove("active");
     currentStep++;
-    if (currentStep == 3 && playing) {
+    if (currentStep == 2*player_count  && playing) {
         togglePlaying()
     }
     if (currentStep == 2*player_count + 1) {
