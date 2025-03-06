@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cake Cutting Algorithm Visualizations</title>
+		<link rel="stylesheet" href="styles.css">
+		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	</head>
+	<body>
+		<div class="aspect-container">
+			<div class="blur" onclick="toggleModal()" id="blur"></div>
+			<center>
+				<div class="container" id="modal">
+					<div id="chart_div"></div>
+					<div class="controls-container">
+						<form onsubmit="event.preventDefault(); addToList();">
+							<button type="button" onclick="copyToClipboard(values[agent])">Copy</button>
+							<button type="button" onclick="readFromClipboard()">Paste</button>
+							<input type="text" pattern="[0-9]*[.,]?[0-9]*" id="numberInput" placeholder="value" required>
+							<button style="background-color: green;" type="submit">Insert</button>
+							<button style="background-color: red;" type="button" onclick="removeFromList()">Remove</button>
+							<button style="background-color: gray;" class="clear-btn" type="button" onclick="clearChart()">Clear</button>
+							<button style="background-color: green;" class="clear-btn" type="button" onclick="toggleModal()">Done</button>
+						</form>
+					</div>
+				</div>
+				<h1>Cake Cutting Algorithm Visualisations</h1>
+				<div id="agent_container">
+					<div class="agent_wrapper">
+						<img title="Click to edit" onclick="setAgent(0)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(0deg)">
+						<p id="P1">P1</p>
+					</div>
+					<div class="agent_wrapper">
+						<img title="Click to edit" onclick="setAgent(1)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(45deg)">
+						<p id="P2">P2</p>
+					</div>
+					<div class="agent_wrapper">
+						<img title="Click to edit" onclick="setAgent(2)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(90deg)">
+						<p id="P3">P3</p>
+					</div>
+					<div class="agent_wrapper">
+						<img title="Click to edit" onclick="setAgent(3)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(135deg)">
+						<p id="P4">P4</p>
+					</div>
+					<div class="agent_wrapper">
+						<img title="Click to edit" onclick="setAgent(4)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(180deg)">
+						<p id="P5">P5</p>
+					</div>
+					<div class="agent_wrapper">
+						<img title="Click to edit" onclick="setAgent(5)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(225deg)">
+						<p id="P6">P6</p>
+					</div>
+					
+					<div class="agent_wrapper">
+						<img title="Click to edit" onclick="setAgent(6)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(270deg)">
+						<p id="P7">P7</p>
+					</div>
+					
+					<div class="agent_wrapper">
+						<img title="Click to edit" onclick="setAgent(7)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(315deg)">
+						<p id="P8">P8</p>
+					</div>
+				</div>
+				<div class="input_container hidden">
+					<h2>We have a cake which must be shared between three people</h2>
+					<h2>Enter your value equation:</h2>
+					<input class="input large" title="equation" placeholder="y = 1" type="text">
+					<div class="input-group">
+						<h2>Start:</h2>
+						<input class="input small" title="start" placeholder="0" type="text">
+						<h2>End:</h2>
+						<input class="input small" title="end" placeholder="10" type="text">
+					</div>
+				</div>
+				<div id="visualization-container">
+					<div style="width:70%; aspect-ratio: 2.2; background-image:url(assets/cake.png);
+                    background-size: cover; background-position: center; border-radius: 5px;
+                    border-width:thick; border-color:white; border-style:solid;"></div>
+				</div>
+				<div>
+				<img class="controls" onclick="restart()" title="Restart" src="./assets/controls/restart.png">
+				<img class="controls" onclick="previous()" title="Previous step" src="./assets/controls/previous.png">
+				<img class="controls" onclick="togglePlaying()" id="play/pause" title="Play/ Pause" src="./assets/controls/play.png">
+				<img class="controls" onclick="next()" title="Next step" src="./assets/controls/next.png">
+				<div id="progress-container">
+					<div id="progress-bar"></div>
+				</div>
+				</div>
+
+				<div class="code-container">
+					<div id="0" class="row even active">We have a cake which much be divided between many players</div>
+					<div id="1" class="row odd">The knife slides until one player feels the cut would be fair</div>
+					<div id="2" class="row even">The cake is cut and the satisfied player gets their piece</div>
+					<div id="3" class="row odd">We repeat until there is only one player without a piece of cake</div>
+					<div id="4" class="row even">This player is assigned the remainder which they think is the best</div>
+				</div>
+
+			</center>
+		</div>
+		<script src="dubins_spanier.js"></script>
+	</body>
+</html>

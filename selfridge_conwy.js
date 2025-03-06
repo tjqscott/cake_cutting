@@ -236,7 +236,6 @@ function addToList() {
     numInput.value = '';
 
     position += 1
-    console.log(position)
     drawChart();
     chart.setSelection([{
         row: position * 3 + 1,
