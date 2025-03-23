@@ -24,10 +24,12 @@ function drawAgents() {
 // Call the function after the DOM is fully loaded
 drawAgents()
 
+
 // Initialize the values array with the provided data
 for (i = 0; i < player_count; i++) {
     values.push(generateRandomArray(20, 100))
 }
+
 
 function removeAgent(n){
     if (player_count > 1){
@@ -63,21 +65,21 @@ function getPlayerColor(playerIndex) {
 function algorithm(){
 
 
-    position = 0
+    current_position = 0
     player_count = values.length
     target = 1/player_count
     assignments = new Array(player_count).fill(-1)
     cake_wise_assignments = []
 
     for (i=0;i<player_count-1;i++){
-        offers = values.map((x,index) => assignments[index] == -1 ? diff_cut(x,position,target) : Infinity)
+        offers = values.map((x,index) => assignments[index] == -1 ? diff_cut(x,current_position,target) : Infinity)
         winner = offers.indexOf(Math.min(...offers))
         cake_wise_assignments.push(winner)
-        assignments[winner] = [position, offers[winner]]
-        position = offers[winner]
+        assignments[winner] = [current_position, offers[winner]]
+        current_position = offers[winner]
     }
     last_player = assignments.findIndex(a => a == -1)
-    assignments[last_player] = [position, 1]
+    assignments[last_player] = [current_position, 1]
     cake_wise_assignments.push(last_player)
     
     steps = [
@@ -220,4 +222,6 @@ function previous() {
 // Initialize
 let currentStep = 0;
 algorithm()
+
+
 showStep(0);

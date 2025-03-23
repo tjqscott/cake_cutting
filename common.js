@@ -106,6 +106,7 @@ function toggleModal() {
 }
 
 function drawChart() {
+
     var data = new google.visualization.DataTable();
     data.addColumn('number', 'X');
     data.addColumn('number', 'Area');
@@ -169,6 +170,7 @@ function drawChart() {
             bottom: '5%' 
         }
     };
+
 
     chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
     chart.draw(data, options);
@@ -268,7 +270,6 @@ function clearChart() {
 }
 
 function setAgent(n) {
-    console.log(agent)
     if (agent != n || position == undefined) {
         agent = n;
         position = values[agent].length - 1;
