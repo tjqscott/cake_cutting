@@ -163,9 +163,10 @@ function drawChart() {
         colors: ['#4285F4', '#4285F4'],
         chartArea: {
             left: 0,
-            top: 0,
+            top: '5%',
             width: '100%',
-            height: '100%'
+            height: '90%', 
+            bottom: '5%' 
         }
     };
 
