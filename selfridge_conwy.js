@@ -50,49 +50,55 @@ function algorithm() {
 
     main_assignments = [agent_a_assignment[0], agent_b_assignment, agent_c_assignment]
 
-    agent_PA_trim_value = diff_eval(values[PA], trim[0], trim[1])
-    agent_PA_trim_cuts = [
-        [trim[0], diff_cut(values[PA], trim[0], agent_PA_trim_value / 3)],
-        [diff_cut(values[PA], trim[0], agent_PA_trim_value / 3), diff_cut(values[PA], trim[0], 2 * agent_PA_trim_value / 3)],
-        [diff_cut(values[PA], trim[0], 2 * agent_PA_trim_value / 3), trim[1]]
-    ]
+agent_PB_trim_value = diff_eval(values[PB], trim[0], trim[1]);
 
-    save_trim_piece_cuts = agent_PA_trim_cuts.slice()
+agent_PB_trim_cuts = [
+    [trim[0], diff_cut(values[PB], trim[0], agent_PB_trim_value / 3)],
+    [diff_cut(values[PB], trim[0], agent_PB_trim_value / 3), diff_cut(values[PB], trim[0], 2 * agent_PB_trim_value / 3)],
+    [diff_cut(values[PB], trim[0], 2 * agent_PB_trim_value / 3), trim[1]]
+];
 
-    save_stretched_trim_cuts = agent_PA_trim_cuts.map(([start, end]) => [(start - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0]), (end - (agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])) / (agent_PA_trim_cuts.sort(([, a], [, b]) => b - a)[0][1] - agent_PA_trim_cuts.sort(([a], [b]) => a - b)[0][0])]);
+save_trim_piece_cuts = [...agent_PB_trim_cuts];
 
-    // Initialize the assignments array
-    trim_assignments = [-1, -1, -1];
+min_cut = Math.min(...agent_PB_trim_cuts.map(([start]) => start));
+max_cut = Math.max(...agent_PB_trim_cuts.map(([, end]) => end));
+range = max_cut - min_cut;
 
-    // Store a copy of the original cuts for reference
-    const originalCuts = [...agent_PA_trim_cuts];
+save_stretched_trim_cuts = agent_PB_trim_cuts.map(([start, end]) => [
+    (start - min_cut) / range,
+    (end - min_cut) / range
+]);
 
-    // Step 1: Find the best option for PB
-    let pbUtilities = agent_PA_trim_cuts.map((x, i) => ({
-        index: i,
-        value: diff_eval(values[PB], x[0], x[1])
-    }));
-    trim_assignments[PB] = pbUtilities.reduce((iMax, x, i, arr) =>
-        x.value > arr[iMax].value ? i : iMax, 0
-    );
+trim_assignments = [-1, -1, -1];
 
-    // Step 2: Find the best option for agent 0, excluding PB's choice
-    let availableOptions = [0, 1, 2].filter(i => i !== trim_assignments[PB]);
-    let agent0Utilities = availableOptions.map(i => ({
-        index: i,
-        value: diff_eval(values[0], originalCuts[i][0], originalCuts[i][1])
-    }));
-    trim_assignments[0] = agent0Utilities.reduce((iMax, x, i, arr) =>
-        x.value > arr[iMax].value ? i : iMax, 0
-    );
-    // Fix: We need to get the actual index, not the position in the reduced array
-    trim_assignments[0] = agent0Utilities[trim_assignments[0]].index;
+paUtilities = agent_PB_trim_cuts.map((cut, index) => ({
+    index,
+    value: diff_eval(values[PA], cut[0], cut[1])
+}));
 
-    // Step 3: PA gets the remaining option
-    trim_assignments[PA] = [0, 1, 2].find(i =>
-        i !== trim_assignments[PB] &&
-        i !== trim_assignments[0]
-    );
+trim_assignments[PA] = paUtilities.reduce((maxIndex, current, _, arr) => 
+    current.value > arr[maxIndex].value ? current.index : maxIndex, 
+    0
+);
+
+availableOptions = [0, 1, 2].filter(i => i !== trim_assignments[PA]);
+
+agent0Utilities = availableOptions.map(index => ({
+    index,
+    value: diff_eval(values[0], agent_PB_trim_cuts[index][0], agent_PB_trim_cuts[index][1])
+}));
+
+agent0BestOptionIndex = agent0Utilities.reduce((maxIndex, current, i, arr) => 
+    current.value > arr[maxIndex].value ? i : maxIndex, 
+    0
+);
+
+trim_assignments[0] = agent0Utilities[agent0BestOptionIndex].index;
+
+trim_assignments[PB] = [0, 1, 2].find(i => 
+    i !== trim_assignments[PA] && 
+    i !== trim_assignments[0]
+);
 
 
     colours = ["#DE9F9F", "#DEDE9F", "#9FDEDE"]
@@ -317,7 +323,7 @@ function showStep(stepIndex) {
                     })</p>
                     ${values
                     .map((agent, index) => 
-                        `<p style="color:${colours[index]}"> value: ${
+                        `<p class=${piece.color == colours[index] && "highlight"} style="color:${colours[index]}"> value: ${
                             // Use the updated range for calculating diff_eval if the piece is in save_stretched_trim_cuts
                             save_stretched_trim_cuts.includes(piece.range)
                                 ? diff_eval(agent, 

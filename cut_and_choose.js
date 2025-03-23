@@ -5,6 +5,9 @@ for (i = 0; i < 2; i++) {
     values.push(generateRandomArray(20, 100))
 }
 
+
+colours = ["#DE9F9F", "#9FDEDE"]
+
 function algorithm(){
     pieces = [[0,cut(values[0], 0.5)],[cut(values[0], 0.5),1]]
     assignments = [-1,-1]
@@ -73,7 +76,7 @@ function showStep(stepIndex) {
                     <p style="color:black">(${piece.range[0].toFixed(4)}, ${piece.range[1].toFixed(4)})</p>
                     ${values
                     .map((agent, index) => 
-                        `<p style="color:${colours[index]}"> value: ${diff_eval(agent, piece.range[0], piece.range[1]).toFixed(4)}</p>`
+                        `<p class=${piece.color == colours[index] && "highlight"} style="color:${colours[index]}"> value: ${diff_eval(agent, piece.range[0], piece.range[1]).toFixed(4)}</p>`
                     )
                     .join("") }
                 </div>

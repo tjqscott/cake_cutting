@@ -150,7 +150,7 @@ function showStep(stepIndex) {
                     <p style="color:black">(${piece.range[0].toFixed(4)}, ${piece.range[1].toFixed(4)})</p>
                     ${values
                     .map((agent, index) => 
-                        `<p style="color:${getPlayerColor(index)}"> value: ${diff_eval(agent, piece.range[0], piece.range[1]).toFixed(4)}</p>`
+                        `<p class="${index == cake_wise_assignments[pieceIndex] && (pieceIndex < sortedPieces.length - 1 || currentStep == 2*player_count ) && "highlight" }" style="color:${ getPlayerColor(index) }"> value: ${diff_eval(agent, piece.range[0], piece.range[1]).toFixed(4)}</p>`
                     )
                     .join("") }
                 </div>
