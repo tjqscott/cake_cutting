@@ -289,7 +289,7 @@ function showStep(stepIndex) {
     const container = document.getElementById('visualization-container');
 
     agents = ["P1", "P2", "P3"]
-    if (stepIndex == 7) {
+    if (stepIndex > 6) {
         document.getElementById(agents[PA]).innerHTML = agents[PA] + ", PA"
         document.getElementById(agents[PB]).innerHTML = agents[PB] + ", PB"
     } else if (stepIndex < 7) {
@@ -331,7 +331,7 @@ function showStep(stepIndex) {
                                     save_trim_piece_cuts[save_stretched_trim_cuts.indexOf(piece.range)][1]
                                 ).toFixed(4)
                                 : diff_eval(agent, piece.range[0], piece.range[1]).toFixed(4)
-                        }</p>`
+                        }</p>` 
                     )
                     .join("") }
                 </div>
