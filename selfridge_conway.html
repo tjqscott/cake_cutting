@@ -23,12 +23,15 @@
 						</form>
 					</div>
 				</div>
+				<div id="main-content">
+				<div id="header">
 				<h1>Cake Cutting Algorithm Visualisations</h1>
 				<select id="pageDropdown" onchange="switchPage(this.value)">
 					<option value="selfridge_conway.html">3 Player Selfridge-Conway</option>
 					<option value="index.html">Two player cut and choose</option>
 					<option value="dubins_spanier.html">Dubins Spanier Algorithm</option>
 				</select>
+				
 				<div id="agent_container">
 					<div class="agent_wrapper">
 						<img title="Click to edit" onclick="setAgent(0)" src="./assets/agent.png" alt="user icon" class="agent_icon" style="filter: hue-rotate(0deg)">
@@ -43,22 +46,13 @@
 						<p id="P3">P3</p>
 					</div>
 				</div>
-				<div class="input_container hidden">
-					<h2>We have a cake which must be shared between three people</h2>
-					<h2>Enter your value equation:</h2>
-					<input class="input large" title="equation" placeholder="y = 1" type="text">
-					<div class="input-group">
-						<h2>Start:</h2>
-						<input class="input small" title="start" placeholder="0" type="text">
-						<h2>End:</h2>
-						<input class="input small" title="end" placeholder="10" type="text">
-					</div>
 				</div>
 				<div id="visualization-container">
 					<div style="width:70%; aspect-ratio: 2.2; background-image:url(assets/cake.png);
                     background-size: cover; background-position: center; border-radius: 5px;
                     border-width:thick; border-color:white; border-style:solid;"></div>
 				</div>
+				<div id="controls">
 				<img class="controls" onclick="restart()" title="Restart" src="./assets/controls/restart.png">
 				<img class="controls" onclick="previous()" title="Previous step" src="./assets/controls/previous.png">
 				<img class="controls" onclick="togglePlaying()" id="play/pause" title="Play/ Pause" src="./assets/controls/play.png">
@@ -66,8 +60,8 @@
 				<div id="progress-container">
 					<div id="progress-bar"></div>
 				</div>
-				<br>
-				<br>
+				</div>
+
 				<div class="code-container">
 					<div id="0" class="row even active">Main cake:</div>
 					<div id="1" class="row odd indent">P1 cuts the cake into three pieces they consider of equal size</div>
@@ -83,10 +77,8 @@
 					<div id="11" class="row odd indent">Finally, PB gets the last remaining piece of the trimming</div>
 					<div id="12" class="row even">Then we can combine the trim assignments to the main ones</div>
 				</div>
-				<br>
-				<br>
-				<br>
-				<br>
+			</div>
+
 			</center>
 		</div>
 		<script src="common.js"></script>

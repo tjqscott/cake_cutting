@@ -142,12 +142,14 @@ function showStep(stepIndex) {
     <h3 id="title_container" style="height:2.5em">${steps[stepIndex].title}</h3>
     <div class="cake-container">
         ${sortedPieces.map((piece, pieceIndex) => `
+            
             <div class="cake-piece" 
                     style="width:${ (piece.range[1] - piece.range[0]) * 70}%; 
                            background-position: ${-(container.clientWidth * 0.7) * piece.range[0]}px 0;
                            border-color:${piece.color};
+                           margin-top: 7.5vh;
                            display:${isNaN(piece.range[0]) || Math.abs(piece.range[0] - piece.range[1]) < 0.0000001 ? 'none' : 'inline-block'}">
-                           
+
                 <div class="hover-info" >
                     <p style="color:black">(${piece.range[0].toFixed(4)}, ${piece.range[1].toFixed(4)})</p>
                     ${values
@@ -160,6 +162,31 @@ function showStep(stepIndex) {
         `).join('')}
     </div>
 `;
+
+
+
+}
+
+function moveKnife(stepIndex, move_step) {
+    // If resetting, just go to initial position
+    if (move_step == 0) {
+        document.getElementById("knife").style.left = initialposition + "px";
+        return;
+    }
+    if (move_step == 1){
+        let newPosition = initialposition;
+    
+        for (let i = 0; i < stepIndex + 1; i++) {
+            let adjustment = (steps[i+1].pieces[steps[i+1].pieces.length-2].range[1] - 
+                             steps[i+1].pieces[steps[i+1].pieces.length-2].range[0]) * initialwidth + 7.5;
+            newPosition += adjustment;
+        }
+        
+        // Set the absolute position directly
+        document.getElementById("knife").style.left = newPosition + "px";
+        console.log("Absolute position: " + newPosition);
+    }
+
 }
 
 total_steps = 1 + (player_count-1)*2 + 2
@@ -200,6 +227,7 @@ function next() {
         currentStep = 0;
     }
     showStep(step_to_step(currentStep));
+    moveKnife(step_to_step(currentStep), step_to_stack(currentStep));
     document.getElementById(step_to_stack(currentStep)).classList.add("active");
 }
 
@@ -213,6 +241,7 @@ function previous() {
         togglePlaying();
     }
     showStep(step_to_step(currentStep));
+    moveKnife(step_to_step(currentStep), step_to_stack(currentStep));
     document.getElementById(step_to_stack(currentStep)).classList.add("active");
 }
 
@@ -222,6 +251,9 @@ function previous() {
 // Initialize
 let currentStep = 0;
 algorithm()
-
-
 showStep(0);
+
+document.getElementById("knife").style.top = document.getElementsByClassName("cake-piece")[0].getBoundingClientRect().top - 0.07 * window.innerHeight + "px";
+initialposition = document.getElementsByClassName("cake-piece")[0].getBoundingClientRect().left
+initialwidth = document.getElementsByClassName("cake-piece")[0].getBoundingClientRect().right - initialposition
+document.getElementById("knife").style.left = initialposition + "px";

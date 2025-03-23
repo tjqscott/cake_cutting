@@ -8,21 +8,23 @@
 	<body>
 		<div class="aspect-container">
 			<div class="blur" onclick="toggleModal()" id="blur"></div>
-			<center>
-				<div class="container" id="modal">
-					<div id="chart_div"></div>
-					<div class="controls-container">
-						<form onsubmit="event.preventDefault(); addToList();">
-							<button type="button" onclick="copyToClipboard(values[agent])">Copy</button>
-							<button type="button" onclick="readFromClipboard()">Paste</button>
-							<input type="text" pattern="[0-9]*[.,]?[0-9]*" id="numberInput" placeholder="value" required>
-							<button style="background-color: green;" type="submit">Insert</button>
-							<button style="background-color: red;" type="button" onclick="removeFromList()">Remove</button>
-							<button style="background-color: gray;" class="clear-btn" type="button" onclick="clearChart()">Clear</button>
-							<button style="background-color: green;" class="clear-btn" type="button" onclick="toggleModal()">Done</button>
-						</form>
-					</div>
+			<div class="container" id="modal">
+				<div id="chart_div"></div>
+				<div class="controls-container">
+					<form onsubmit="event.preventDefault(); addToList();">
+						<button type="button" onclick="copyToClipboard(values[agent])">Copy</button>
+						<button type="button" onclick="readFromClipboard()">Paste</button>
+						<input type="text" pattern="[0-9]*[.,]?[0-9]*" id="numberInput" placeholder="value" required>
+						<button style="background-color: green;" type="submit">Insert</button>
+						<button style="background-color: red;" type="button" onclick="removeFromList()">Remove</button>
+						<button style="background-color: gray;" class="clear-btn" type="button" onclick="clearChart()">Clear</button>
+						<button style="background-color: green;" class="clear-btn" type="button" onclick="toggleModal()">Done</button>
+					</form>
 				</div>
+			</div>
+			<center>
+				<div id="main-content">
+				<div id="header">
 				<h1>Cake Cutting Algorithm Visualisations</h1>
 				<select id="pageDropdown" onchange="switchPage(this.value)">
 					<option value="dubins_spanier.html">Dubins Spanier Algorithm</option>
@@ -32,23 +34,15 @@
 				<div id="agent_container">
 
 				</div>
-				<div class="input_container hidden">
-					<h2>We have a cake which must be shared between three people</h2>
-					<h2>Enter your value equation:</h2>
-					<input class="input large" title="equation" placeholder="y = 1" type="text">
-					<div class="input-group">
-						<h2>Start:</h2>
-						<input class="input small" title="start" placeholder="0" type="text">
-						<h2>End:</h2>
-						<input class="input small" title="end" placeholder="10" type="text">
-					</div>
 				</div>
+
 				<div id="visualization-container">
+
 					<div style="width:70%; aspect-ratio: 2.2; background-image:url(assets/cake.png);
                     background-size: cover; background-position: center; border-radius: 5px;
                     border-width:thick; border-color:white; border-style:solid;"></div>
 				</div>
-				<div>
+				<div id="controls">
 				<img class="controls" onclick="restart()" title="Restart" src="./assets/controls/restart.png">
 				<img class="controls" onclick="previous()" title="Previous step" src="./assets/controls/previous.png">
 				<img class="controls" onclick="togglePlaying()" id="play/pause" title="Play/ Pause" src="./assets/controls/play.png">
@@ -65,8 +59,9 @@
 					<div id="3" class="row odd">We repeat until there is only one player without a piece of cake</div>
 					<div id="4" class="row even">This player is assigned the remainder which they think is the best</div>
 				</div>
-
+			</div>
 			</center>
+				<img id="knife" src="./assets/knife.png"></img>
 		</div>
 		<script src="common.js"></script>
 		<script src="dubins_spanier.js"></script>

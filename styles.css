@@ -433,3 +433,24 @@ select {
 	padding-right:10px;
 	border: medium solid black;
  }
+
+ #knife_parent{
+	width:100%;
+	position:absolute
+ }
+
+ #knife{
+	width: 7vh;
+	aspect-ratio: 1;
+	position: fixed;
+	top:7vh;
+
+    transition: left 0.5s ease;
+ }
+
+ #main-content {
+	display: grid;
+	grid-template-rows: auto auto 1fr auto;
+	height: 100vh;
+	gap: 20px; /* Adjustable space between items */
+  }
